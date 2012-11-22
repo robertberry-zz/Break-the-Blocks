@@ -1,0 +1,23 @@
+element resources {
+  element images {
+    element image {
+      element name { text },
+      element path { text }
+    }*
+  },
+  element sounds {
+    element sound {
+      element name { text },
+      element path { text }
+    }*
+  },
+  element fonts {
+    element font {
+      element name { text },
+      element family { text },
+      element size { xsd:integer },
+      element style { "plain" | "bold" },
+      element colour { text }
+    }*
+  }
+}

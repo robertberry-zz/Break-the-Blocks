@@ -10,4 +10,15 @@
       <path>ball.png</path>
     </image>
   </images>
+  <sounds>
+  </sounds>
+  <fonts>
+    <font>
+      <name>header</name>
+      <family>Courier</family>
+      <size>24</size>
+      <style>plain</style>
+      <colour>white</colour>
+    </font>
+  </fonts>
 </resources>

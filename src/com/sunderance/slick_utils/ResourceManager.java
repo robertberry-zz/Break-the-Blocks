@@ -10,22 +10,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * Slick resource manager - loads and caches images and sounds based on an
@@ -94,30 +87,21 @@ public class ResourceManager {
 	 * @return The resource manager
 	 * @throws XPathExpressionException
 	 */
-	public static ResourceManager fromDocument(Document doc) 
-			throws XPathExpressionException {
-		Map<String, String> imagePaths = new HashMap<String, String>();
+	public static ResourceManager fromDocument(Document doc) {
+		Element root = doc.getRootElement();
 		
-		NodeList images = doc.getDocumentElement()
-				.getElementsByTagName("image");
+		HashMap<String, String> imagePaths = new HashMap<String, String>();
 		
-	
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath xpath = factory.newXPath();
-		XPathExpression selectTitle = xpath.compile("name");
-		XPathExpression selectPath = xpath.compile("path");
+		Elements images = root.getFirstChildElement("images")
+				.getChildElements("image");
 		
-		for (int i = 0, len = images.getLength(); i < len; i++) {
-			Node node = images.item(i);
-
-			Element image = (Element) node;
+		for (int i = 0, len = images.size(); i < len; i++) {
+			Element image = images.get(i);
 			
-			String title = ((NodeList) selectTitle.evaluate(image, 
-					XPathConstants.NODESET)).item(0).getTextContent();
-			String path = ((NodeList) selectPath.evaluate(image, 
-					XPathConstants.NODESET)).item(0).getTextContent();
+			Element name = image.getFirstChildElement("name");
+			Element path = image.getFirstChildElement("path");
 			
-			imagePaths.put(title, path);
+			imagePaths.put(name.getValue(), path.getValue());
 		}
 		
 		return new ResourceManager(imagePaths);
@@ -128,19 +112,17 @@ public class ResourceManager {
 	 * 
 	 * @param file The file
 	 * @return The manager
+	 * @throws ParsingException 
+	 * @throws ValidityException 
 	 * @throws ParserConfigurationException 
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws XPathExpressionException 
 	 */
-	public static ResourceManager fromFile(File file) throws 
-		ParserConfigurationException, SAXException, IOException, 
-		XPathExpressionException {
-		DocumentBuilderFactory docBuilderFactory = 
-				DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(file);
-		
-		return fromDocument(doc);
+	public static ResourceManager fromFile(File file) throws ValidityException,
+		ParsingException, IOException {
+		Builder builder = new Builder();
+		Document document = builder.build(file);
+		return fromDocument(document);
 	}
 }

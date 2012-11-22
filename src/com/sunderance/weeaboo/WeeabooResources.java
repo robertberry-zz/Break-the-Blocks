@@ -3,11 +3,10 @@ package com.sunderance.weeaboo;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
+import nu.xom.ParsingException;
+import nu.xom.ValidityException;
 
 import org.newdawn.slick.Image;
-import org.xml.sax.SAXException;
 
 import com.sunderance.slick_utils.ResourceManager;
 
@@ -29,11 +28,9 @@ public class WeeabooResources {
 		// TODO clean this up
 		try {
 			manager = ResourceManager.fromFile(definitions);
-		} catch (XPathExpressionException e) {
+		} catch (ValidityException e) {
 			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
+		} catch (ParsingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();

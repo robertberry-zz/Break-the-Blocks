@@ -9,5 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/slick.jar"/>
+	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/xom-1.2.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

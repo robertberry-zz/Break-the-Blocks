@@ -17,7 +17,11 @@ element resources {
       element family { text },
       element size { xsd:integer },
       element style { "plain" | "bold" },
-      element colour { text }
+      element colour {
+        element red { xsd:integer },
+        element green { xsd:integer },
+        element blue { xsd:integer }
+      }
     }*
   }
 }

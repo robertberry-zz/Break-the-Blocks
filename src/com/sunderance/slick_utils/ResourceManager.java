@@ -16,6 +16,7 @@ import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
 import org.newdawn.slick.Image;
+import org.newdawn.slick.UnicodeFont;
 
 /**
  * Slick resource manager - loads and caches images and sounds based on an
@@ -27,24 +28,37 @@ public class ResourceManager {
 	private static final String IMAGE_FOLDER_PATH = "res/images/";
 	
 	private ResourceCache<Image> imageCache;
+	private ResourceCache<UnicodeFont> fontCache;
 
 	/**
 	 * Constructs a resource manager with the given image cache
 	 * 
 	 * @param imageCache The image cache
 	 */
-	private ResourceManager(ResourceCache<Image> imageCache) {
+	private ResourceManager(ResourceCache<Image> imageCache,
+			ResourceCache<UnicodeFont> fontCache) {
 		this.imageCache = imageCache;
+		this.fontCache = fontCache;
 	}
 	
 	/**
-	 * Given an image name returns (and caches) the image
+	 * Given an image name returns the image
 	 * 
 	 * @param name The image name
 	 * @return The image
 	 */
 	public Image getImage(String name) {
 		return imageCache.getResource(name);
+	}
+	
+	/**
+	 * Given a font name returns the font
+	 * 
+	 * @param name The font name
+	 * @return The font
+	 */
+	public UnicodeFont getFont(String name) {
+		return fontCache.getResource(name);
 	}
 	
 	/**
@@ -71,11 +85,15 @@ public class ResourceManager {
 		Elements fonts = root.getFirstChildElement("fonts")
 				.getChildElements("font");
 		
+		ResourceCache<UnicodeFont> fontCache =
+				new ResourceCache<UnicodeFont>(new 
+						UnicodeFontResourceBuilder());
+		
 		for (int i = 0, len = fonts.size(); i < len; i++) {
-			// pass
+			fontCache.addResourceDefinition(fonts.get(i));
 		}
 		
-		return new ResourceManager(imageCache);
+		return new ResourceManager(imageCache, fontCache);
 	}
 	
 	/**

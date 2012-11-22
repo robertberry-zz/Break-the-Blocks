@@ -1,0 +1,34 @@
+/**
+ * 
+ */
+package com.sunderance.weeaboo.entities;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
+/**
+ * An entity is a visible object in the game
+ * 
+ * @author Robert Berry
+ */
+public interface Entity {
+	/**
+	 * Update method
+	 * 
+	 * @param gc
+	 * @param game
+	 * @param delta
+	 */
+	public void update(GameContainer gc, StateBasedGame game, int delta);
+	
+	/**
+	 * Render method
+	 * 
+	 * @param gc
+	 * @param game
+	 * @param graphics
+	 */
+	public void render(GameContainer gc, StateBasedGame game, 
+			Graphics graphics);
+}

@@ -34,9 +34,8 @@ import org.xml.sax.SAXException;
  * @author Robert Berry
  */
 public class ResourceManager {
-	private final String RESOURCE_ROOT = "res/";
-	
-	private final String IMAGES_FOLDER = "images/";
+	private final static String RESOURCE_ROOT = "res/";
+	private final static String IMAGES_FOLDER = "images/";
 	
 	Map<String, String> imagePaths;
 	Map<String, Image> cachedImages = new HashMap<String, Image>();

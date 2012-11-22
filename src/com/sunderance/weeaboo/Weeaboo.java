@@ -17,8 +17,8 @@ import com.sunderance.weeaboo.states.*;
  */
 public class Weeaboo extends StateBasedGame {
 	private static final boolean FULL_SCREEN = false;
-	private static final int SCREEN_WIDTH = 200;
-	private static final int SCREEN_HEIGHT = 400;
+	private static final int SCREEN_WIDTH = 640;
+	private static final int SCREEN_HEIGHT = 640;
 	private static final int TARGET_FRAMES_PER_SECOND = 60;
 	private static final boolean SHOW_FRAMES_PER_SECOND = true;
 	

@@ -3,14 +3,17 @@
  */
 package com.sunderance.weeaboo.states;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sunderance.weeaboo.entities.Entity;
+import com.sunderance.weeaboo.entities.EntityFactory;
 import com.sunderance.weeaboo.Weeaboo.State;
-import com.sunderance.weeaboo.WeeabooResources;
 
 /**
  * In game state.
@@ -18,7 +21,8 @@ import com.sunderance.weeaboo.WeeabooResources;
  * @author Robert Berry
  */
 public class InGame extends BaseState {
-	Image paddle;
+	
+	List<Entity> entities = new ArrayList<Entity>();
 	
 	public InGame(State stateID) {
 		super(stateID);
@@ -31,9 +35,13 @@ public class InGame extends BaseState {
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
 
-		WeeabooResources resources = WeeabooResources.getInstance();
-		paddle = resources.getImage("paddle");
+		EntityFactory entityFactory = EntityFactory.getInstance();
 		
+		addEntity(entityFactory.createPaddle());
+	}
+	
+	private void addEntity(Entity entity) {
+		entities.add(entity);
 	}
 
 	/* (non-Javadoc)
@@ -42,17 +50,20 @@ public class InGame extends BaseState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics graphics)
 			throws SlickException {
-		paddle.draw(0, 0);
+		for (Entity entity : entities) {
+			entity.render(gc, game, graphics);
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.newdawn.slick.state.GameState#update(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, int)
 	 */
 	@Override
-	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
+	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
-		// TODO Auto-generated method stub
-
+		for (Entity entity : entities) {
+			entity.update(gc, game, delta);
+		}
 	}
 
 }

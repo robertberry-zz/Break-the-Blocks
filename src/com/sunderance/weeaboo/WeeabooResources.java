@@ -26,19 +26,16 @@ public class WeeabooResources {
 	private WeeabooResources() {
 		File definitions = new File(DEFINITIONS_PATH);
 		
+		// TODO clean this up
 		try {
 			manager = ResourceManager.fromFile(definitions);
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

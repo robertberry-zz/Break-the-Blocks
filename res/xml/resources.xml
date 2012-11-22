@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<resources>
+  <images>
+    <image>
+      <name>paddle</name>
+      <path>paddle.png</path>
+    </image>
+    <image>
+      <name>ball</name>
+      <path>ball.png</path>
+    </image>
+  </images>
+</resources>

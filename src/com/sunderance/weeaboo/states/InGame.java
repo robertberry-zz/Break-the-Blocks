@@ -9,8 +9,11 @@ import java.util.List;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sunderance.slick_utils.GeometryUtilities;
+import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 import com.sunderance.weeaboo.entities.Entity;
 import com.sunderance.weeaboo.entities.EntityFactory;
 import com.sunderance.weeaboo.Weeaboo.State;
@@ -35,9 +38,15 @@ public class InGame extends BaseState {
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
 
+		GeometryUtilities geoUtils = GeometryUtilities.getInstance();
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		
-		addEntity(entityFactory.createPaddle());
+		ComponentBasedEntity paddle = entityFactory.createPaddle();
+		
+		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
+		
+		
+		addEntity(paddle);
 	}
 	
 	private void addEntity(Entity entity) {

@@ -41,4 +41,14 @@ public class ImageRenderComponent extends RenderComponent {
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		// do nothing
 	}
+
+	@Override
+	public int getWidth() {
+		return image.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return image.getHeight();
+	}
 }

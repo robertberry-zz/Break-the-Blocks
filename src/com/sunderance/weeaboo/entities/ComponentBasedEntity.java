@@ -20,11 +20,8 @@ import com.sunderance.weeaboo.components.RenderComponent;
  * @author Robert Berry
  */
 public class ComponentBasedEntity implements Entity {
-
 	private Vector2f position;
-	
 	private RenderComponent renderComponent;
-	
 	private List<Component> components = new ArrayList<Component>();
 	
 	/**
@@ -59,6 +56,24 @@ public class ComponentBasedEntity implements Entity {
 	public void addComponent(Component component) {
 		component.setOwner(this);
 		components.add(component);
+	}
+	
+	/**
+	 * Width of the entity in pixels
+	 * 
+	 * @return The width
+	 */
+	public int getWidth() {
+		return renderComponent.getWidth();
+	}
+	
+	/**
+	 * Height of the entity in pixels
+	 * 
+	 * @return The height
+	 */
+	public int getHeight() {
+		return renderComponent.getHeight();
 	}
 	
 	/**

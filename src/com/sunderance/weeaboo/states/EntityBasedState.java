@@ -8,6 +8,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sunderance.slick_utils.EventTimer;
+import com.sunderance.slick_utils.TimedEvent;
 import com.sunderance.weeaboo.Weeaboo.State;
 import com.sunderance.weeaboo.entities.Entity;
 
@@ -15,12 +17,29 @@ abstract public class EntityBasedState extends BaseState {
 
 	List<Entity> entities = new ArrayList<Entity>();
 	
+	EventTimer timer = new EventTimer();
+	
 	public EntityBasedState(State stateID) {
 		super(stateID);
 	}
 
+	/**
+	 * Adds an entity into play
+	 * 
+	 * @param entity The entity
+	 */
 	protected void addEntity(Entity entity) {
 		entities.add(entity);
+	}
+	
+	/**
+	 * Adds a timed event to trigger after the given delay
+	 * 
+	 * @param delay The delay in milliseconds
+	 * @param event The event
+	 */
+	protected void addTimedEvent(int delay, TimedEvent event) {
+		timer.addEvent(delay, event);
 	}
 
 	/* (non-Javadoc)
@@ -40,9 +59,9 @@ abstract public class EntityBasedState extends BaseState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
+		timer.update(delta);
 		for (Entity entity : entities) {
 			entity.update(gc, game, delta);
 		}
 	}
-
 }

@@ -60,11 +60,23 @@ public class GeometryUtilities {
 	 * 
 	 * @param gc The game container
 	 * @param entity The entity
-	 * @return The vector
+	 * @return The position
 	 */
 	public Vector2f getBottomCentre(GameContainer gc, 
 			ComponentBasedEntity entity) {
 		return new Vector2f(getCentreX(gc, entity), getBottomY(gc, entity));
+	}
+	
+	/**
+	 * Vector to place entity at the middle centre of the screen
+	 * 
+	 * @param gc The game container
+	 * @param entity The entity
+	 * @return The position
+	 */
+	public Vector2f getMiddleCentre(GameContainer gc,
+			ComponentBasedEntity entity) {
+		return new Vector2f(getCentreX(gc, entity), getMiddleY(gc, entity));
 	}
 	
 	/**
@@ -89,8 +101,29 @@ public class GeometryUtilities {
 	}
 	
 	/**
+	 * Middle y co-ordinate for the game
+	 * 
+	 * @param gc The game container
+	 * @return The y co-ordinate
+	 */
+	public float getMiddleY(GameContainer gc) {
+		return gc.getHeight() / 2;
+	}
+	
+	/**
+	 * Y co-ordinate to place entity in the middle of the game play area
+	 * 
+	 * @param gc The game container
+	 * @param entity The entity
+	 * @return The y co-ordinate
+	 */
+	public float getMiddleY(GameContainer gc, ComponentBasedEntity entity) {
+		return getMiddleY(gc) - entity.getHeight() / 2;
+	}
+	
+	/**
 	 * X co-ordinate for the top-left of the entity to place it centrally
-	 * in the game
+	 * in the game play area
 	 * 
 	 * @param gc The game container
 	 * @param entity The entity

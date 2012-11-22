@@ -47,6 +47,17 @@ public class EntityFactory {
 		return paddle;
 	}
 	
+	public ComponentBasedEntity createBall() {
+		Image ballImage = resources.getImage("ball");
+		Vector2f position = new Vector2f(0, 0);
+		ImageRenderComponent renderBall = new ImageRenderComponent(ballImage);
+		
+		ComponentBasedEntity ball = new ComponentBasedEntity(position,
+				renderBall);
+		
+		return ball;
+	}
+	
 	/**
 	 * Returns the singleton
 	 * 

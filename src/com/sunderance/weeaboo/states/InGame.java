@@ -42,9 +42,11 @@ public class InGame extends BaseState {
 		
 		ComponentBasedEntity paddle = entityFactory.createPaddle();
 		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
-		
-		
 		addEntity(paddle);
+		
+		ComponentBasedEntity ball = entityFactory.createBall();
+		ball.setPosition(geoUtils.getMiddleCentre(gc, ball));
+		addEntity(ball);
 	}
 	
 	private void addEntity(Entity entity) {

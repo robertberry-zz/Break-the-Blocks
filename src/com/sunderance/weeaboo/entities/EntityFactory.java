@@ -7,6 +7,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Vector2f;
 
 import com.sunderance.weeaboo.WeeabooResources;
+import com.sunderance.weeaboo.components.BallMovementComponent;
 import com.sunderance.weeaboo.components.ImageRenderComponent;
 import com.sunderance.weeaboo.components.PaddleMovementComponent;
 
@@ -47,6 +48,11 @@ public class EntityFactory {
 		return paddle;
 	}
 	
+	/**
+	 * Constructs the ball
+	 * 
+	 * @return The ball
+	 */
 	public ComponentBasedEntity createBall() {
 		Image ballImage = resources.getImage("ball");
 		Vector2f position = new Vector2f(0, 0);
@@ -54,6 +60,8 @@ public class EntityFactory {
 		
 		ComponentBasedEntity ball = new ComponentBasedEntity(position,
 				renderBall);
+		
+		ball.addComponent(new BallMovementComponent(0.1f));
 		
 		return ball;
 	}

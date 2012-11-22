@@ -31,10 +31,9 @@ public class ComponentBasedEntity implements Entity {
 	 * @param position The position
 	 * @param renderComponent The component used to render the entity
 	 */
-	public ComponentBasedEntity(Vector2f position, 
-			RenderComponent renderComponent) {
+	public ComponentBasedEntity(RenderComponent renderComponent) {
 		super();
-		this.position = position;
+		this.position = new Vector2f(0, 0);
 		this.setRenderComponent(renderComponent);
 	}
 	

@@ -7,6 +7,7 @@ import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
 import org.newdawn.slick.Image;
+import org.newdawn.slick.UnicodeFont;
 
 import com.sunderance.slick_utils.ResourceManager;
 
@@ -45,6 +46,16 @@ public class WeeabooResources {
 	 */
 	public Image getImage(String name) {
 		return manager.getImage(name);
+	}
+	
+	/**
+	 * Returns the font with the given name
+	 * 
+	 * @param name The name
+	 * @return The font
+	 */
+	public UnicodeFont getFont(String name) {
+		return manager.getFont(name);
 	}
 	
 	/**

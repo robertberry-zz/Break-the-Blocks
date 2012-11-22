@@ -19,9 +19,9 @@
       <size>24</size>
       <style>plain</style>
       <colour>
-        <red>255</red>
-        <green>255</green>
-        <blue>255</blue>
+        <red>100</red>
+        <green>100</green>
+        <blue>100</blue>
       </colour>
     </font>
   </fonts>

@@ -11,19 +11,12 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.sunderance.weeaboo.Weeaboo.State;
 import com.sunderance.weeaboo.entities.Entity;
 
-public class EntityBasedState extends BaseState {
+abstract public class EntityBasedState extends BaseState {
 
 	List<Entity> entities = new ArrayList<Entity>();
 	
 	public EntityBasedState(State stateID) {
 		super(stateID);
-	}
-
-	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
-			throws SlickException {
-		// TODO Auto-generated method stub
-
 	}
 
 	protected void addEntity(Entity entity) {

@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
 
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
@@ -21,7 +22,7 @@ public class UnicodeFontResourceBuilder extends ResourceBuilder<UnicodeFont> {
 	@Override
 	public UnicodeFont build(Element fontInfo) {
 		String family = fontInfo.getFirstChildElement("family").getValue();
-		Integer size = Integer.getInteger(fontInfo.getFirstChildElement("size")
+		Integer size = Integer.parseInt(fontInfo.getFirstChildElement("size")
 				.getValue());
 		
 		int style = Font.PLAIN;
@@ -36,19 +37,24 @@ public class UnicodeFontResourceBuilder extends ResourceBuilder<UnicodeFont> {
 		
 		Element colourInfo = fontInfo.getFirstChildElement("colour");
 		
-		Integer red = Integer.getInteger(colourInfo
+		Integer red = Integer.parseInt(colourInfo
 				.getFirstChildElement("red").getValue());
-		Integer green = Integer.getInteger(colourInfo
+		Integer green = Integer.parseInt(colourInfo
 				.getFirstChildElement("green").getValue());
-		Integer blue = Integer.getInteger(colourInfo
+		Integer blue = Integer.parseInt(colourInfo
 				.getFirstChildElement("blue").getValue());
 		
 		UnicodeFont font = new UnicodeFont(new Font(family, style, size));
 		font.addAsciiGlyphs();
 		
-		List<ColorEffect> effects = (List<ColorEffect>) font.getEffects();
 		Color colour = new Color(red, green, blue);
-		effects.add(new ColorEffect(colour));
+		font.getEffects().add(new ColorEffect(colour));
+				
+		try {
+			font.loadGlyphs();
+		} catch (SlickException e) {
+			// TODO throw an unchecked exception
+		}
 		
 		return font;
 	}

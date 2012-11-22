@@ -1,0 +1,8 @@
+<blocks>
+  <block>
+    <type>basic</type>
+    <image_name>blue_block</image_name>
+    <x>50</x>
+    <y>50</y>
+  </block>
+</blocks>

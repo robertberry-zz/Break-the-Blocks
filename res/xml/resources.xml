@@ -9,6 +9,10 @@
       <name>ball</name>
       <path>ball.png</path>
     </image>
+    <image>
+      <name>blue_block</name>
+      <path>blocks/blue.png</path>
+    </image>
   </images>
   <sounds>
   </sounds>

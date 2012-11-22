@@ -1,0 +1,8 @@
+element blocks {
+  element block {
+    element type { "basic" },
+    element image_name { text },
+    element x { xsd:integer },
+    element y { xsd:integer }
+  }+
+}

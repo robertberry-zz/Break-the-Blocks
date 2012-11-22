@@ -5,7 +5,6 @@ package com.sunderance.slick_utils;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.List;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;

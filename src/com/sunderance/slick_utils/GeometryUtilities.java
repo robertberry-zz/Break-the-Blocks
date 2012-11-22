@@ -24,6 +24,38 @@ public class GeometryUtilities {
 	}
 	
 	/**
+	 * Given a position for an entity within the game screen, returns that
+	 * position but bounded within the game screen play area, so that the
+	 * entity is unable to move outside of it.
+	 * 
+	 * TODO write a better comment
+	 * 
+	 * @param gc
+	 * @param entity
+	 * @param newPosition
+	 * @return
+	 */
+	public Vector2f getBoundedPosition(GameContainer gc, 
+			ComponentBasedEntity entity, Vector2f newPosition) {
+		float x = newPosition.getX();
+		float y = newPosition.getY();
+		
+		if (x < 0) {
+			x = 0;
+		} else if (x + entity.getWidth() > gc.getWidth()) {
+			x = gc.getWidth() - entity.getWidth();
+		}
+		
+		if (y < 0) {
+			y = 0;
+		} else if (x + entity.getHeight() > gc.getHeight()) {
+			y = gc.getHeight() - entity.getHeight();
+		}
+		
+		return new Vector2f(x, y);
+	}
+	
+	/**
 	 * Vector to place entity at the bottom centre of the screen
 	 * 
 	 * @param gc The game container

@@ -8,6 +8,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import com.sunderance.weeaboo.WeeabooResources;
 import com.sunderance.weeaboo.components.ImageRenderComponent;
+import com.sunderance.weeaboo.components.PaddleMovementComponent;
 
 /**
  * Factory for constructing entities in the game
@@ -40,6 +41,8 @@ public class EntityFactory {
 		
 		ComponentBasedEntity paddle = new ComponentBasedEntity(position,
 				renderPaddle);
+		
+		paddle.addComponent(new PaddleMovementComponent(0.5f));
 		
 		return paddle;
 	}

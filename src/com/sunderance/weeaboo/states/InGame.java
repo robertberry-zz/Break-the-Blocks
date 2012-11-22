@@ -9,7 +9,6 @@ import java.util.List;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.sunderance.slick_utils.GeometryUtilities;
@@ -42,7 +41,6 @@ public class InGame extends BaseState {
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		
 		ComponentBasedEntity paddle = entityFactory.createPaddle();
-		
 		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
 		
 		
@@ -74,5 +72,4 @@ public class InGame extends BaseState {
 			entity.update(gc, game, delta);
 		}
 	}
-
 }

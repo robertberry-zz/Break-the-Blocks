@@ -8,10 +8,10 @@ import java.util.List;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.sunderance.weeaboo.components.Component;
+import com.sunderance.slick_utils.Vector2f;
+import com.sunderance.weeaboo.components.UpdateComponent;
 import com.sunderance.weeaboo.components.RenderComponent;
 
 /**
@@ -21,8 +21,11 @@ import com.sunderance.weeaboo.components.RenderComponent;
  */
 public class ComponentBasedEntity implements Entity {
 	private Vector2f position;
+	private Vector2f velocity;
+	private Vector2f acceleration;
+	
 	private RenderComponent renderComponent;
-	private List<Component> components = new ArrayList<Component>();
+	private List<UpdateComponent> components = new ArrayList<UpdateComponent>();
 	
 	/**
 	 * Create a component based entity at the given position and with the given
@@ -44,7 +47,7 @@ public class ComponentBasedEntity implements Entity {
 	 */
 	public void setRenderComponent(RenderComponent renderComponent) {
 		this.renderComponent = renderComponent;
-		this.addComponent(renderComponent);
+		this.addUpdateComponent(renderComponent);
 	}
 
 	/**
@@ -52,7 +55,7 @@ public class ComponentBasedEntity implements Entity {
 	 * 
 	 * @param component The component
 	 */
-	public void addComponent(Component component) {
+	public void addUpdateComponent(UpdateComponent component) {
 		component.setOwner(this);
 		components.add(component);
 	}
@@ -95,7 +98,7 @@ public class ComponentBasedEntity implements Entity {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
-		for (Component component : components) {
+		for (UpdateComponent component : components) {
 			component.update(gc, game, delta);
 		}
 	}
@@ -104,6 +107,26 @@ public class ComponentBasedEntity implements Entity {
 	public void render(GameContainer gc, StateBasedGame game, 
 			Graphics graphics) {
 		renderComponent.render(gc, game, graphics);
+	}
+
+	@Override
+	public Vector2f getVelocity() {
+		return velocity;
+	}
+
+	@Override
+	public Vector2f getAcceleration() {
+		return acceleration;
+	}
+
+	@Override
+	public void setVelocity(Vector2f velocity) {
+		this.velocity = velocity;
+	}
+
+	@Override
+	public void setAcceleration(Vector2f acceleration) {
+		this.acceleration = acceleration;
 	}
 
 }

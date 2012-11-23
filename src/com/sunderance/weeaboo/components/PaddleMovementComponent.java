@@ -5,16 +5,16 @@ package com.sunderance.weeaboo.components;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.sunderance.slick_utils.GeometryUtilities;
+import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
 /**
  * @author Robert Berry
  */
-public class PaddleMovementComponent extends Component {
+public class PaddleMovementComponent extends UpdateComponent {
 	private float speed;
 	
 	private GeometryUtilities geoUtils;

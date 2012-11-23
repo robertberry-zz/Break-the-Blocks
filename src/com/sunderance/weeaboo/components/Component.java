@@ -3,16 +3,14 @@
  */
 package com.sunderance.weeaboo.components;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.state.StateBasedGame;
-
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
 /**
+ * Basic component.
  * 
  * @author Robert Berry
  */
-abstract public class Component {
+public class Component {
 	private ComponentBasedEntity owner;
 	
 	public ComponentBasedEntity getOwner() {
@@ -22,7 +20,4 @@ abstract public class Component {
 	public void setOwner(ComponentBasedEntity owner) {
 		this.owner = owner;
 	}
-
-	abstract public void update(GameContainer gc, StateBasedGame game, 
-			int delta);
 }

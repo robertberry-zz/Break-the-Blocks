@@ -1,12 +1,12 @@
 package com.sunderance.weeaboo.components;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
-public class BallMovementComponent extends Component {
+public class BallMovementComponent extends UpdateComponent {
 	private Vector2f velocity;
 
 	public BallMovementComponent(float speed) {
@@ -19,7 +19,8 @@ public class BallMovementComponent extends Component {
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		ComponentBasedEntity owner = getOwner();
 		
-		owner.setPosition(owner.getPosition().add(
-				new Vector2f(velocity).scale(delta)));
+		Vector2f newPosition = owner.getPosition().add(velocity.scale(delta));
+		
+		owner.setPosition(newPosition);
 	}
 }

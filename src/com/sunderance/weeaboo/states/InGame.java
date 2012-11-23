@@ -27,6 +27,11 @@ import com.sunderance.weeaboo.Weeaboo.State;
  * @author Robert Berry
  */
 public class InGame extends EntityBasedState {
+	
+	ComponentBasedEntity paddle;
+	private ComponentBasedEntity ball;
+	private List<ComponentBasedEntity> blocks;
+	
 	public InGame(State stateID) {
 		super(stateID);
 	}
@@ -38,11 +43,11 @@ public class InGame extends EntityBasedState {
 		GeometryUtilities geoUtils = GeometryUtilities.getInstance();
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		
-		ComponentBasedEntity paddle = entityFactory.createPaddle();
+		paddle = entityFactory.createPaddle();
 		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
 		addEntity(paddle);
 		
-		ComponentBasedEntity ball = entityFactory.createBall();
+		ball = entityFactory.createBall();
 		ball.setPosition(geoUtils.getMiddleCentre(gc, ball));
 		addEntity(ball);
 		
@@ -51,20 +56,25 @@ public class InGame extends EntityBasedState {
 		Builder builder = new Builder();
 		try {
 			Document document = builder.build("res/xml/level1.xml");
-			List<ComponentBasedEntity> blocks = 
-					blockFactory.createBlocks(document);
+			blocks = blockFactory.createBlocks(document);
 			for (ComponentBasedEntity block : blocks) {
 				addEntity(block);
 			}
 		} catch (ValidityException e) {
-			// TODO Auto-generated catch block
+			// TODO Clean up this mess
 			e.printStackTrace();
 		} catch (ParsingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override 
+	public void update(GameContainer gc, StateBasedGame game,
+			int delta) throws SlickException {
+		super.update(gc, game, delta);
+		
+		
 	}
 }

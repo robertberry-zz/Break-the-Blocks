@@ -3,8 +3,11 @@
  */
 package com.sunderance.slick_utils;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.geom.Vector2f;
 
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
@@ -16,6 +19,10 @@ import com.sunderance.weeaboo.entities.ComponentBasedEntity;
  */
 public class GeometryUtilities {
 	private static GeometryUtilities instance;
+	
+	public enum Bound {
+		TOP, LEFT, RIGHT, BOTTOM
+	}
 	
 	/**
 	 * Singleton - cannot be instantiated by end-user.
@@ -37,18 +44,27 @@ public class GeometryUtilities {
 	 */
 	public Vector2f getBoundedPosition(GameContainer gc, 
 			ComponentBasedEntity entity, Vector2f newPosition) {
+		Set<Bound> bounds = new HashSet<Bound>(Arrays.asList(Bound.values()));
+		return getBoundedPosition(gc, entity, newPosition, bounds);
+	}
+	
+	public Vector2f getBoundedPosition(GameContainer gc, 
+			ComponentBasedEntity entity, Vector2f newPosition,
+			Set<Bound> bounds) {
 		float x = newPosition.getX();
 		float y = newPosition.getY();
 		
-		if (x < 0) {
+		if (bounds.contains(Bound.LEFT) && x < 0) {
 			x = 0;
-		} else if (x + entity.getWidth() > gc.getWidth()) {
+		} else if (bounds.contains(Bound.RIGHT) &&
+				x + entity.getWidth() > gc.getWidth()) {
 			x = gc.getWidth() - entity.getWidth();
 		}
 		
-		if (y < 0) {
+		if (bounds.contains(Bound.TOP) && y < 0) {
 			y = 0;
-		} else if (x + entity.getHeight() > gc.getHeight()) {
+		} else if (bounds.contains(Bound.BOTTOM) &&
+				x + entity.getHeight() > gc.getHeight()) {
 			y = gc.getHeight() - entity.getHeight();
 		}
 		

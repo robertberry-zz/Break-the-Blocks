@@ -3,8 +3,7 @@ package com.sunderance.weeaboo.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.newdawn.slick.geom.Vector2f;
-
+import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.WeeabooResources;
 import com.sunderance.weeaboo.components.ImageRenderComponent;
 

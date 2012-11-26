@@ -48,9 +48,9 @@ public class GeometryUtilitiesTest {
 					p3 = points[2],
 					p4 = points[3];
 			
-			assertTrue(geoUtils.intercepts(p1, p2, p3, p4));
+			assertTrue(geoUtils.intercepts(p1, p2, p3, p4).isPresent());
 			// should also work for lines defined in opposite directions
-			assertTrue(geoUtils.intercepts(p2, p1, p4, p3));
+			assertTrue(geoUtils.intercepts(p2, p1, p4, p3).isPresent());
 		}
 		
 		for (Vector2f[] points : Arrays.asList(nonInterceptors)) {
@@ -59,8 +59,8 @@ public class GeometryUtilitiesTest {
 					p3 = points[2],
 					p4 = points[3];
 			
-			assertFalse(geoUtils.intercepts(p1, p2, p3, p4));
-			assertFalse(geoUtils.intercepts(p2, p1, p4, p3));
+			assertFalse(geoUtils.intercepts(p1, p2, p3, p4).isPresent());
+			assertFalse(geoUtils.intercepts(p2, p1, p4, p3).isPresent());
 		}
 	}
 

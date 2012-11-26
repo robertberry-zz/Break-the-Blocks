@@ -36,6 +36,16 @@ public class Vector2f {
 	}
 	
 	/**
+	 * The vector minus the other
+	 * 
+	 * @param other The other vector
+	 * @return The difference vector
+	 */
+	public Vector2f subtract(Vector2f other) {
+		return new Vector2f(x - other.getX(), y - other.getY());
+	}
+	
+	/**
 	 * X component of vector
 	 * 
 	 * @return X component

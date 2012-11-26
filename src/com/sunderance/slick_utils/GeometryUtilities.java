@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.newdawn.slick.GameContainer;
 
+import com.google.common.base.Optional;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
 /**
@@ -150,6 +151,18 @@ public class GeometryUtilities {
 	}
 	
 	/**
+	 * Magnitude of the distance between p1 and p2
+	 * 
+	 * @param p1 The first point
+	 * @param p2 The second point
+	 * @return The magnitude
+	 */
+	public float magnitude(Vector2f p1, Vector2f p2) {
+		return (float) Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) +
+				Math.pow(p2.getY() - p1.getY(), 2));
+	}
+	
+	/**
 	 * Whether the line segments defined as p1 -> p2 and p3 -> p4 intersect
 	 * 
 	 * @param p1 Start of line 1
@@ -158,7 +171,7 @@ public class GeometryUtilities {
 	 * @param p4 End of line 2
 	 * @return Whether an intersection occurs
 	 */
-	public boolean intercepts(Vector2f p1, Vector2f p2, Vector2f p3, 
+	public Optional<Vector2f> intercepts(Vector2f p1, Vector2f p2, Vector2f p3, 
 			Vector2f p4) {
 		float x1 = p1.getX(),
 				y1 = p1.getX(),
@@ -173,13 +186,18 @@ public class GeometryUtilities {
 		
 		if (denom == 0) {
 			// lines are parallel
-			return false;
+			return Optional.absent();
 		} else {
 			float ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) /
 					denom;
 			float ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) /
 					denom;
-			return ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1;
+			if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1) {
+				return Optional.of(new Vector2f(x1 + ua * (x2 - x1),
+						y1 + ua * (y2 - y1)));
+			} else {
+				return Optional.absent();
+			}
 		}
 	}
 	

@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sunderance.slick_utils.Rect;
 import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.components.UpdateComponent;
 import com.sunderance.weeaboo.components.RenderComponent;
@@ -20,9 +21,10 @@ import com.sunderance.weeaboo.components.RenderComponent;
  * @author Robert Berry
  */
 public class ComponentBasedEntity implements Entity {
-	private Vector2f position;
 	private Vector2f velocity;
 	private Vector2f acceleration;
+	
+	private Rect rect;
 	
 	private RenderComponent renderComponent;
 	private List<UpdateComponent> components = new ArrayList<UpdateComponent>();
@@ -36,10 +38,13 @@ public class ComponentBasedEntity implements Entity {
 	 */
 	public ComponentBasedEntity(RenderComponent renderComponent) {
 		super();
-		this.position = Vector2f.zero();
+
 		this.velocity = Vector2f.zero();
 		this.acceleration = Vector2f.zero();
 		this.setRenderComponent(renderComponent);
+		
+		rect = new Rect(Vector2f.zero(), renderComponent.getWidth(),
+				renderComponent.getHeight());
 	}
 	
 	/**
@@ -86,7 +91,7 @@ public class ComponentBasedEntity implements Entity {
 	 * @return The position
 	 */
 	public Vector2f getPosition() {
-		return position;
+		return rect.getCentre();
 	}
 
 	/**
@@ -95,7 +100,7 @@ public class ComponentBasedEntity implements Entity {
 	 * @param position The new position
 	 */
 	public void setPosition(Vector2f position) {
-		this.position = position;
+		rect = rect.withCentre(position);
 	}
 
 	@Override
@@ -129,6 +134,10 @@ public class ComponentBasedEntity implements Entity {
 	@Override
 	public void setAcceleration(Vector2f acceleration) {
 		this.acceleration = acceleration;
+	}
+	
+	public Rect getRect() {
+		return rect;
 	}
 	
 	public void stop() {

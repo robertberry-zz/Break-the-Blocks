@@ -34,24 +34,34 @@ public class InGame extends EntityBasedState {
 	private ComponentBasedEntity ball;
 	private List<ComponentBasedEntity> blocks;
 	
+	private static float BALL_INITIAL_SPEED = 0.3f;
+	
 	public InGame(State stateID) {
 		super(stateID);
 	}
 
+	private void newPaddle(GameContainer gc) {
+		GeometryUtilities geoUtils = GeometryUtilities.getInstance();
+		EntityFactory entityFactory = EntityFactory.getInstance();		
+		paddle = entityFactory.createPaddle();
+		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
+		addEntity(paddle);		
+	}
+	
+	private void newBall(GameContainer gc) {
+		GeometryUtilities geoUtils = GeometryUtilities.getInstance();
+		EntityFactory entityFactory = EntityFactory.getInstance();
+		ball = entityFactory.createBall();
+		ball.setPosition(geoUtils.getMiddleCentre(gc, ball));
+		ball.setVelocity(new Vector2f(0, BALL_INITIAL_SPEED));
+		addEntity(ball);
+	}
+	
 	@Override
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
-
-		GeometryUtilities geoUtils = GeometryUtilities.getInstance();
-		EntityFactory entityFactory = EntityFactory.getInstance();
-		
-		paddle = entityFactory.createPaddle();
-		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
-		addEntity(paddle);
-		
-		ball = entityFactory.createBall();
-		ball.setPosition(geoUtils.getMiddleCentre(gc, ball));
-		addEntity(ball);
+		newBall(gc);
+		newPaddle(gc);
 		
 		BlockFactory blockFactory = BlockFactory.getInstance();
 		
@@ -72,28 +82,40 @@ public class InGame extends EntityBasedState {
 		}
 	}
 	
-	@Override 
-	public void update(GameContainer gc, StateBasedGame game,
-			int delta) throws SlickException {
-		super.update(gc, game, delta);
-		
+	public void updatePaddle(GameContainer gc, StateBasedGame game, int delta) {
 		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
 		
 		Vector2f newPaddlePosition = mechanicsUtils.getNextPosition(paddle, 
 				delta);
 		
 		if (newPaddlePosition.getX() < 0) {
-			paddle.setPosition(newPaddlePosition.withX(0));
-			paddle.setVelocity(Vector2f.zero());
-			paddle.setAcceleration(Vector2f.zero());
+			newPaddlePosition = newPaddlePosition.withX(0);
+			paddle.stop();
 		} else if (newPaddlePosition.getX() + 
 				paddle.getWidth() > gc.getWidth()) {
-			paddle.setAcceleration(newPaddlePosition.withX(gc.getWidth() 
-					- paddle.getWidth()));
-			paddle.setVelocity(Vector2f.zero());
-			paddle.setAcceleration(Vector2f.zero());
-		} else {
-			paddle.setPosition(newPaddlePosition);
+			newPaddlePosition = newPaddlePosition.withX(gc.getWidth() 
+					- paddle.getWidth());
+			paddle.stop();
 		}
+		paddle.setPosition(newPaddlePosition);		
+	}
+	
+	public void updateBall(GameContainer gc, StateBasedGame game, int delta) {
+		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
+		
+		Vector2f pos = mechanicsUtils.getNextPosition(ball, delta);
+		
+		
+		
+		ball.setPosition(pos);
+	}
+	
+	@Override 
+	public void update(GameContainer gc, StateBasedGame game,
+			int delta) throws SlickException {
+		super.update(gc, game, delta);
+		
+		updatePaddle(gc, game, delta);
+		updateBall(gc, game, delta);
 	}
 }

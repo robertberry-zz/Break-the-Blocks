@@ -130,5 +130,9 @@ public class ComponentBasedEntity implements Entity {
 	public void setAcceleration(Vector2f acceleration) {
 		this.acceleration = acceleration;
 	}
-
+	
+	public void stop() {
+		setVelocity(Vector2f.zero());
+		setAcceleration(Vector2f.zero());
+	}
 }

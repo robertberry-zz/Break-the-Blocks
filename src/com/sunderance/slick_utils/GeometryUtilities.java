@@ -150,6 +150,40 @@ public class GeometryUtilities {
 	}
 	
 	/**
+	 * Whether the line segments defined as p1 -> p2 and p3 -> p4 intersect
+	 * 
+	 * @param p1 Start of line 1
+	 * @param p2 End of line 1
+	 * @param p3 Start of line 2
+	 * @param p4 End of line 2
+	 * @return Whether an intersection occurs
+	 */
+	public boolean intercepts(Vector2f p1, Vector2f p2, Vector2f p3, 
+			Vector2f p4) {
+		float x1 = p1.getX(),
+				y1 = p1.getX(),
+				x2 = p2.getX(),
+				y2 = p2.getY(),
+				x3 = p3.getX(),
+				y3 = p3.getY(),
+				x4 = p4.getX(),
+				y4 = p4.getY();
+		
+		float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+		
+		if (denom == 0) {
+			// lines are parallel
+			return false;
+		} else {
+			float ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) /
+					denom;
+			float ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) /
+					denom;
+			return ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1;
+		}
+	}
+	
+	/**
 	 * Instance of the singleton
 	 * 
 	 * @return The instance

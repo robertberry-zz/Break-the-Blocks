@@ -36,7 +36,9 @@ public class ComponentBasedEntity implements Entity {
 	 */
 	public ComponentBasedEntity(RenderComponent renderComponent) {
 		super();
-		this.position = new Vector2f(0, 0);
+		this.position = Vector2f.zero();
+		this.velocity = Vector2f.zero();
+		this.acceleration = Vector2f.zero();
 		this.setRenderComponent(renderComponent);
 	}
 	

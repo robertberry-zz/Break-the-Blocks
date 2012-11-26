@@ -6,7 +6,6 @@ package com.sunderance.weeaboo.entities;
 import org.newdawn.slick.Image;
 
 import com.sunderance.weeaboo.WeeabooResources;
-import com.sunderance.weeaboo.components.BallMovementComponent;
 import com.sunderance.weeaboo.components.ImageRenderComponent;
 import com.sunderance.weeaboo.components.PaddleMovementComponent;
 
@@ -39,7 +38,7 @@ public class EntityFactory {
 				new ImageRenderComponent(paddleImage);
 		
 		ComponentBasedEntity paddle = new ComponentBasedEntity(renderPaddle);
-		paddle.addUpdateComponent(new PaddleMovementComponent(0.5f));
+		paddle.addUpdateComponent(new PaddleMovementComponent(0.05f, 0.1f));
 		
 		return paddle;
 	}
@@ -54,8 +53,6 @@ public class EntityFactory {
 		ImageRenderComponent renderBall = new ImageRenderComponent(ballImage);
 		
 		ComponentBasedEntity ball = new ComponentBasedEntity(renderBall);
-		
-		ball.addUpdateComponent(new BallMovementComponent(0.1f));
 		
 		return ball;
 	}

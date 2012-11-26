@@ -71,6 +71,15 @@ public class Vector2f {
 	public Vector2f sgn() {
 		return new Vector2f(x > 0 ? 1 : -1, y > 0 ? 1 : -1);
 	}
+	
+	/**
+	 * Absolute-value form of the vector
+	 * 
+	 * @return The absolute value form
+	 */
+	public Vector2f abs() {
+		return new Vector2f(x < 0 ? -x : x, y < 0 ? -y : y);
+	}
 
 	/**
 	 * Result of multiplying the x and y co-ordinates of this and the other
@@ -81,5 +90,43 @@ public class Vector2f {
 	 */
 	public Vector2f scale(Vector2f other) {
 		return new Vector2f(x * other.getX(), y * other.getY());
+	}
+	
+	/**
+	 * Zero vector
+	 * 
+	 * @return The vector
+	 */
+	public static Vector2f zero() {
+		return new Vector2f(0, 0);
+	}
+	
+	/**
+	 * Vector as string
+	 * 
+	 * @return The string
+	 */
+	public String toString() {
+		return String.format("Vector2f(%f, %f)", x, y);
+	}
+	
+	/**
+	 * This vector with the given x component
+	 * 
+	 * @param x The x component
+	 * @return The vector
+	 */
+	public Vector2f withX(float x) {
+		return new Vector2f(x, y);
+	}
+	
+	/**
+	 * This vector with the given y component
+	 * 
+	 * @param y The y component
+	 * @return The vector
+	 */
+	public Vector2f withY(float y) {
+		return new Vector2f(x, y);
 	}
 }

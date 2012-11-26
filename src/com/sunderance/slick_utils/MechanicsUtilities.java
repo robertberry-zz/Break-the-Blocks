@@ -55,7 +55,7 @@ public class MechanicsUtilities {
 	 * 
 	 * @return The instance
 	 */
-	public MechanicsUtilities getInstance() {
+	public static MechanicsUtilities getInstance() {
 		if (instance == null) {
 			instance = new MechanicsUtilities();
 		}

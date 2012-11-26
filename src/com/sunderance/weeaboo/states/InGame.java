@@ -16,6 +16,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.sunderance.slick_utils.GeometryUtilities;
+import com.sunderance.slick_utils.MechanicsUtilities;
+import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.entities.BlockFactory;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 import com.sunderance.weeaboo.entities.EntityFactory;
@@ -75,6 +77,23 @@ public class InGame extends EntityBasedState {
 			int delta) throws SlickException {
 		super.update(gc, game, delta);
 		
+		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
 		
+		Vector2f newPaddlePosition = mechanicsUtils.getNextPosition(paddle, 
+				delta);
+		
+		if (newPaddlePosition.getX() < 0) {
+			paddle.setPosition(newPaddlePosition.withX(0));
+			paddle.setVelocity(Vector2f.zero());
+			paddle.setAcceleration(Vector2f.zero());
+		} else if (newPaddlePosition.getX() + 
+				paddle.getWidth() > gc.getWidth()) {
+			paddle.setAcceleration(newPaddlePosition.withX(gc.getWidth() 
+					- paddle.getWidth()));
+			paddle.setVelocity(Vector2f.zero());
+			paddle.setAcceleration(Vector2f.zero());
+		} else {
+			paddle.setPosition(newPaddlePosition);
+		}
 	}
 }

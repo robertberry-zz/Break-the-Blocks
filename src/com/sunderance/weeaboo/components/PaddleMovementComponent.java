@@ -7,7 +7,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.sunderance.slick_utils.GeometryUtilities;
 import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
@@ -15,9 +14,8 @@ import com.sunderance.weeaboo.entities.ComponentBasedEntity;
  * @author Robert Berry
  */
 public class PaddleMovementComponent extends UpdateComponent {
-	private float speed;
-	
-	private GeometryUtilities geoUtils;
+	private float maxSpeed;
+	private float acceleration;
 
 	/**
 	 * Creates a paddle movement component that moves the paddle at the given
@@ -25,26 +23,44 @@ public class PaddleMovementComponent extends UpdateComponent {
 	 * 
 	 * @param speed How many pixels per ms the paddle moves
 	 */
-	public PaddleMovementComponent(float speed) {
+	public PaddleMovementComponent(float maxSpeed, 
+			float acceleration) {
 		super();
-		this.speed = speed;
-		geoUtils = GeometryUtilities.getInstance();
+		this.maxSpeed = maxSpeed;
+		this.acceleration = acceleration;
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
 		Input input = gc.getInput();
 		
-		float x_d = 0;
+		ComponentBasedEntity owner = getOwner();
+		
+		float xSpeed = Math.abs(owner.getVelocity().getX());
+		boolean aboveMax = xSpeed >= maxSpeed;
+		int movement = 0;
 		
 		if (input.isKeyDown(Input.KEY_LEFT)) {
-			x_d -= speed * delta;
+			movement = -1;
 		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
-			x_d += speed * delta;
+			movement = 1;
 		}
 		
-		ComponentBasedEntity owner = getOwner();
-		Vector2f newPosition = owner.getPosition().add(new Vector2f(x_d, 0));
-		owner.setPosition(geoUtils.getBoundedPosition(gc, owner, newPosition));
+		if (movement == 0) {
+			if (owner.getVelocity().getX() > 0) {
+				owner.setAcceleration(new Vector2f(-acceleration, 0));
+			} else if (owner.getVelocity().getX() < 0) {
+				owner.setAcceleration(new Vector2f(acceleration, 0));
+			} else {
+				owner.setAcceleration(Vector2f.zero());
+			}
+		} else {
+			if (aboveMax) {
+				owner.setAcceleration(Vector2f.zero());
+				owner.setVelocity(new Vector2f(maxSpeed * movement, 0));
+			} else {
+				owner.setAcceleration(new Vector2f(acceleration * movement, 0));
+			}
+		}
 	}
 }

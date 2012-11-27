@@ -107,6 +107,33 @@ public class InGame extends EntityBasedState {
 		paddle.setPosition(newRect.getCentre());
 	}
 	
+	public void bounceBall(Intercept i) {
+		Vector2f posIntercept = i.getPosition();
+		Vector2f velocity = ball.getVelocity();
+		
+		switch (i.getSide()) {
+			case LEFT:
+			case RIGHT:
+				ball.setVelocity(velocity.withX(-velocity.getX()));
+				break;
+			case TOP:
+			case BOTTOM:
+				ball.setVelocity(velocity.withY(-velocity.getY()));
+				break;
+		}
+		
+		collisionPoint = posIntercept;
+		ball.setPosition(posIntercept);		
+	}
+	
+	int calculateInterceptDelta(Vector2f initial, Vector2f end, 
+			Vector2f intercept, int delta) {
+		float magIntercept = geoUtils.magnitude(initial, intercept);
+		float magFull = geoUtils.magnitude(initial, end);
+		
+		return Math.round(delta * magIntercept / magFull);
+	}
+	
 	public void updateBall2(GameContainer gc, StateBasedGame game, int delta) {
 		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
 		
@@ -121,24 +148,7 @@ public class InGame extends EntityBasedState {
 		
 		if (intercept.isPresent()) {
 			Intercept i = intercept.get();
-			Vector2f posIntercept = i.getPosition();
-			
-			// time at which intercept occurs
-			float magIntercept = geoUtils.magnitude(pos1, posIntercept);
-			float magFull = geoUtils.magnitude(pos1, pos2);
-			
-			float ud = delta * magIntercept / magFull;
-			
-			switch (i.getSide()) {
-				case LEFT:
-				case RIGHT:
-					ball.setVelocity(velocity.withX(-velocity.getX()));
-					break;
-				case TOP:
-				case BOTTOM:
-					ball.setVelocity(velocity.withY(-velocity.getY()));
-					break;
-			}
+			bounceBall(i);
 			
 			// add spin based on paddle velocity
 			if (paddle.getVelocity().isRightward()) {
@@ -149,10 +159,36 @@ public class InGame extends EntityBasedState {
 					1.5f));
 			}
 			
-			collisionPoint = posIntercept;
-			ball.setPosition(posIntercept);
+			updateBall(gc, game, delta - 
+					calculateInterceptDelta(pos1, pos2, i.getPosition(), 
+							delta));
+		} else {
+			updateBall3(gc, game, delta);
+		}
+	}
+	
+	public void updateBall3(GameContainer gc, StateBasedGame game, int delta) {
+		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
+		
+		Vector2f pos1 = ball.getPosition();
+		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
+		
+		// blocks
+		Optional<Intercept> intercept = Optional.absent();
+		
+		for (ComponentBasedEntity block : blocks) {
+			intercept = ballIntercepts(pos1, pos2, block.getRect());
 			
-			updateBall(gc, game, delta - Math.round(ud));
+			if (intercept.isPresent()) {
+				Intercept i = intercept.get();
+				bounceBall(i);
+				break;
+			}
+		}
+		
+		if (intercept.isPresent()) {
+			updateBall(gc, game, delta - calculateInterceptDelta(pos1, pos2, 
+					intercept.get().getPosition(), delta));
 		} else {
 			ball.setPosition(pos2);
 		}
@@ -203,12 +239,8 @@ public class InGame extends EntityBasedState {
 			collisionPoint = posIntercept;
 			ball.setPosition(posIntercept);
 			
-			// time at which intercept occurs
-			float magIntercept = geoUtils.magnitude(pos1, posIntercept);
-			float magFull = geoUtils.magnitude(pos1, pos2);
-			float ud = delta * magIntercept / magFull;
-			
-			updateBall(gc, game, delta - Math.round(ud));
+			updateBall(gc, game, delta - calculateInterceptDelta(pos1, pos2, 
+					posIntercept, delta));
 		} else {
 			updateBall2(gc, game, delta);
 		}

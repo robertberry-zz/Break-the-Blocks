@@ -23,6 +23,9 @@ import com.sunderance.slick_utils.MechanicsUtilities;
 import com.sunderance.slick_utils.Rect;
 import com.sunderance.slick_utils.Side;
 import com.sunderance.slick_utils.Vector2f;
+import com.sunderance.weeaboo.WeeabooResources;
+import com.sunderance.weeaboo.components.ScoreRenderComponent;
+import com.sunderance.weeaboo.components.Scoring;
 import com.sunderance.weeaboo.entities.BlockFactory;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 import com.sunderance.weeaboo.entities.EntityFactory;
@@ -33,15 +36,19 @@ import com.sunderance.weeaboo.Weeaboo.State;
  * 
  * @author Robert Berry
  */
-public class InGame extends EntityBasedState {
-	ComponentBasedEntity paddle;
+public class InGame extends EntityBasedState implements Scoring {
+	private ComponentBasedEntity paddle;
 	private ComponentBasedEntity ball;
 	private List<ComponentBasedEntity> blocks;
 	
-	private static float BALL_INITIAL_SPEED = 0.4f;
+	private static final float BALL_INITIAL_SPEED = 0.4f;
+	private static final int SCORE_LENGTH = 8;
+	
 	private GeometryUtilities geoUtils;
 	
 	private Vector2f collisionPoint;
+	
+	private int score = 0;
 	
 	public InGame(State stateID) {
 		super(stateID);
@@ -54,9 +61,13 @@ public class InGame extends EntityBasedState {
 	 * @param gc The game container
 	 */
 	private void newPaddle(GameContainer gc) {
-		EntityFactory entityFactory = EntityFactory.getInstance();		
+		EntityFactory entityFactory = EntityFactory.getInstance();
+		
+		Rect gcRect = Rect.fromGameContainer(gc);
+		
 		paddle = entityFactory.createPaddle();
-		paddle.setPosition(geoUtils.getBottomCentre(gc, paddle));
+		paddle.setPosition(gcRect.getBottomCentre().subtract(new Vector2f(
+				0, paddle.getHeight() * 1.5f)));
 		addEntity(paddle);		
 	}
 	
@@ -68,7 +79,7 @@ public class InGame extends EntityBasedState {
 	private void newBall(GameContainer gc) {
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		ball = entityFactory.createBall();
-		ball.setPosition(geoUtils.getMiddleCentre(gc, ball));
+		ball.setPosition(Rect.fromGameContainer(gc).getCentre());
 		ball.setVelocity(new Vector2f(0.1f, BALL_INITIAL_SPEED));
 		addEntity(ball);
 	}
@@ -78,6 +89,15 @@ public class InGame extends EntityBasedState {
 			throws SlickException {
 		newBall(gc);
 		newPaddle(gc);
+		
+		WeeabooResources resources = WeeabooResources.getInstance();
+		ScoreRenderComponent scoreRender = new ScoreRenderComponent(
+				resources.getFont("score"), this, SCORE_LENGTH);
+		ComponentBasedEntity scoreView = new ComponentBasedEntity(scoreRender);
+		scoreView.setPosition(Rect.fromGameContainer(gc).getBottomRight()
+				.subtract(scoreView.getDimensions().scale(0.5f))
+				.subtract(new Vector2f(5, 5)));
+		addEntity(scoreView);
 		
 		BlockFactory blockFactory = BlockFactory.getInstance();
 		
@@ -250,6 +270,7 @@ public class InGame extends EntityBasedState {
 	private void removeBlock(ComponentBasedEntity block) {
 		removeEntity(block);
 		blocks.remove(block);
+		score += 100;
 	}
 	
 	/**
@@ -373,5 +394,10 @@ public class InGame extends EntityBasedState {
 		if (collisionPoint != null)
 			graphics.fillOval(collisionPoint.getX(), 
 					collisionPoint.getY(), 5, 5);
+	}
+
+	@Override
+	public int getScore() {
+		return score;
 	}
 }

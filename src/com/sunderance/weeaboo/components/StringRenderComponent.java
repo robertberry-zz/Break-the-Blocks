@@ -32,7 +32,7 @@ public class StringRenderComponent extends RenderComponent {
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, 
 			Graphics graphics) {
-		Vector2f position = getOwner().getPosition();
+		Vector2f position = getOwner().getRect().getTopLeft();
 		
 		font.drawString(position.getX(), position.getY(), text);
 	}

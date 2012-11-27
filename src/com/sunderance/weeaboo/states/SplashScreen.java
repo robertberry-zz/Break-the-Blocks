@@ -7,7 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.sunderance.slick_utils.GeometryUtilities;
+import com.sunderance.slick_utils.Rect;
 import com.sunderance.weeaboo.Weeaboo;
 import com.sunderance.weeaboo.WeeabooResources;
 import com.sunderance.weeaboo.Weeaboo.State;
@@ -29,15 +29,13 @@ public class SplashScreen extends EntityBasedState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
-		
-		GeometryUtilities geoUtils = GeometryUtilities.getInstance();
 		WeeabooResources resources = WeeabooResources.getInstance();
 		
 		StringRenderComponent renderTitle = new StringRenderComponent(
 				resources.getFont("header"), game.getTitle());
 		
 		ComponentBasedEntity title = new ComponentBasedEntity(renderTitle);
-		title.setPosition(geoUtils.getMiddleCentre(gc, title));
+		title.setPosition(Rect.fromGameContainer(gc).getCentre());
 		
 		addEntity(title);
 		

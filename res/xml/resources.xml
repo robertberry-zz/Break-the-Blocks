@@ -28,5 +28,16 @@
         <blue>100</blue>
       </colour>
     </font>
+    <font>
+      <name>score</name>
+      <family>Courier</family>
+      <size>18</size>
+      <style>plain</style>
+      <colour>
+        <red>100</red>
+        <green>200</green>
+        <blue>100</blue>
+      </colour>
+    </font>
   </fonts>
 </resources>

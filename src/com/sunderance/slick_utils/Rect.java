@@ -157,4 +157,8 @@ public class Rect {
 	public Rect withRight(float i) {
 		return new Rect(centre.withX(i - width / 2), width, height);
 	}
+
+	public Vector2f getBottomCentre() {
+		return new Vector2f(centre.getX(), getBottom());
+	}
 }

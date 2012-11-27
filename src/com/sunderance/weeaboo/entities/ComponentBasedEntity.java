@@ -144,4 +144,8 @@ public class ComponentBasedEntity implements Entity {
 		setVelocity(Vector2f.zero());
 		setAcceleration(Vector2f.zero());
 	}
+
+	public Vector2f getDimensions() {
+		return new Vector2f(getWidth(), getHeight());
+	}
 }

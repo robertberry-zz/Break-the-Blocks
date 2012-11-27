@@ -8,6 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.state.StateBasedGame;
 
+import com.sunderance.slick_utils.Rect;
 import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
@@ -33,7 +34,8 @@ public class ImageRenderComponent extends RenderComponent {
 	public void render(GameContainer gc, StateBasedGame game, 
 			Graphics graphics) {
 		ComponentBasedEntity owner = getOwner();
-		Vector2f position = owner.getPosition();
+		Rect rect = owner.getRect();
+		Vector2f position = rect.getTopLeft();
 		this.image.draw(position.getX(), position.getY());
 	}
 

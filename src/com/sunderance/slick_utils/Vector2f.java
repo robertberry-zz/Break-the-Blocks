@@ -1,5 +1,7 @@
 package com.sunderance.slick_utils;
 
+import com.google.common.base.Objects;
+
 /**
  * Drop in replacement for Slick's own Vector2f class. This is an immutable
  * version, so calling 'scale', 'add', etc. will not affect the instance
@@ -138,5 +140,45 @@ public class Vector2f {
 	 */
 	public Vector2f withY(float y) {
 		return new Vector2f(x, y);
+	}
+	
+	public boolean isLeftward() {
+		return x < 0;
+	}
+	
+	public boolean isRightward() {
+		return x > 0;
+	}
+	
+	public boolean isUpward() {
+		return y < 0;
+	}
+	
+	public boolean isDownward() {
+		return y > 0;
+	}
+
+	public Vector2f scaleX(float d) {
+		return new Vector2f(x * d, y);
+	}
+	
+	public Vector2f scaleY(float d) {
+		return new Vector2f(x, y * d);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof Vector2f) {
+			Vector2f that = (Vector2f) other;
+			return this.getX() == that.getX() &&
+					this.getY() == that.getY();
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(x, y);
 	}
 }

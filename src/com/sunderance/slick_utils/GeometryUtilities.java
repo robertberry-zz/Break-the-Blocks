@@ -174,7 +174,7 @@ public class GeometryUtilities {
 	public Optional<Vector2f> intercepts(Vector2f p1, Vector2f p2, Vector2f p3, 
 			Vector2f p4) {
 		float x1 = p1.getX(),
-				y1 = p1.getX(),
+				y1 = p1.getY(),
 				x2 = p2.getX(),
 				y2 = p2.getY(),
 				x3 = p3.getX(),

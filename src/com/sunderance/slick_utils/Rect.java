@@ -3,6 +3,8 @@
  */
 package com.sunderance.slick_utils;
 
+import org.newdawn.slick.GameContainer;
+
 /**
  * Rectangle class - for managing collisions and positioning
  * 
@@ -50,7 +52,7 @@ public class Rect {
 	}
 	
 	public Rect withMargin(float margin) {
-		return new Rect(centre, width + margin, height + margin);
+		return new Rect(centre, width + margin * 2, height + margin * 2);
 	}
 	
 	/**
@@ -88,7 +90,23 @@ public class Rect {
 	 * @return The top left point
 	 */
 	public Vector2f getTopLeft() {
-		return centre.subtract(new Vector2f(width / 2, height / 2));
+		return centre.add(new Vector2f(-width / 2, -height / 2));
+	}
+	
+	public float getLeft() {
+		return centre.getX() - width / 2;
+	}
+	
+	public float getRight() {
+		return centre.getX() + width / 2;
+	}
+	
+	public float getTop() {
+		return centre.getY() - height / 2;
+	}
+	
+	public float getBottom() {
+		return centre.getY() + height / 2;
 	}
 	
 	/**
@@ -118,8 +136,25 @@ public class Rect {
 		return centre.add(new Vector2f(width / 2, height / 2));
 	}
 	
+	public static Rect fromGameContainer(GameContainer gc) {
+		return new Rect(new Vector2f(gc.getWidth() / 2, gc.getHeight() / 2),
+				gc.getWidth(), gc.getHeight());
+	}
+	
 	public String toString() {
 		return String.format("Rect(centre=%s, width=%f, height=%f)",
 				centre.toString(), width, height);
+	}
+
+	public Rect withoutMargin(float margin) {
+		return new Rect(centre, width - margin * 2, height - margin * 2);
+	}
+
+	public Rect withLeft(float i) {
+		return new Rect(centre.withX(i + width / 2), width, height);
+	}
+	
+	public Rect withRight(float i) {
+		return new Rect(centre.withX(i - width / 2), width, height);
 	}
 }

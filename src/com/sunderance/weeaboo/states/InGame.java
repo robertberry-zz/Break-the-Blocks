@@ -12,6 +12,7 @@ import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -38,8 +39,10 @@ public class InGame extends EntityBasedState {
 	private ComponentBasedEntity ball;
 	private List<ComponentBasedEntity> blocks;
 	
-	private static float BALL_INITIAL_SPEED = 0.3f;
+	private static float BALL_INITIAL_SPEED = 0.4f;
 	private GeometryUtilities geoUtils;
+	
+	private Vector2f collisionPoint;
 	
 	public InGame(State stateID) {
 		super(stateID);
@@ -57,7 +60,7 @@ public class InGame extends EntityBasedState {
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		ball = entityFactory.createBall();
 		ball.setPosition(geoUtils.getMiddleCentre(gc, ball));
-		ball.setVelocity(new Vector2f(0, BALL_INITIAL_SPEED));
+		ball.setVelocity(new Vector2f(0.1f, BALL_INITIAL_SPEED));
 		addEntity(ball);
 	}
 	
@@ -92,24 +95,24 @@ public class InGame extends EntityBasedState {
 		
 		Vector2f newPaddlePosition = mechanicsUtils.getNextPosition(paddle, 
 				delta);
+		Rect newRect = paddle.getRect().withCentre(newPaddlePosition);
 		
-		if (newPaddlePosition.getX() < 0) {
-			newPaddlePosition = newPaddlePosition.withX(0);
+		if (newRect.getLeft() < 0) {
+			newRect = newRect.withLeft(0);
 			paddle.stop();
-		} else if (newPaddlePosition.getX() + 
-				paddle.getWidth() > gc.getWidth()) {
-			newPaddlePosition = newPaddlePosition.withX(gc.getWidth() 
-					- paddle.getWidth());
+		} else if (newRect.getRight() > gc.getWidth()) {
+			newRect = newRect.withRight(gc.getWidth());
 			paddle.stop();
 		}
-		paddle.setPosition(newPaddlePosition);
+		paddle.setPosition(newRect.getCentre());
 	}
 	
-	public void updateBall(GameContainer gc, StateBasedGame game, int delta) {
+	public void updateBall2(GameContainer gc, StateBasedGame game, int delta) {
 		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
 		
 		Vector2f pos1 = ball.getPosition();
 		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
+		Vector2f velocity = ball.getVelocity();
 		
 		// paddle
 		
@@ -117,15 +120,14 @@ public class InGame extends EntityBasedState {
 				ballIntercepts(pos1, pos2, paddle.getRect());
 		
 		if (intercept.isPresent()) {
-			System.out.println(paddle.getRect());
 			Intercept i = intercept.get();
 			Vector2f posIntercept = i.getPosition();
 			
 			// time at which intercept occurs
-			float ud = delta * geoUtils.magnitude(pos1, posIntercept)
-					/ geoUtils.magnitude(pos1, pos2);
+			float magIntercept = geoUtils.magnitude(pos1, posIntercept);
+			float magFull = geoUtils.magnitude(pos1, pos2);
 			
-			Vector2f velocity = ball.getVelocity();
+			float ud = delta * magIntercept / magFull;
 			
 			switch (i.getSide()) {
 				case LEFT:
@@ -138,38 +140,105 @@ public class InGame extends EntityBasedState {
 					break;
 			}
 			
+			// add spin based on paddle velocity
+			if (paddle.getVelocity().isRightward()) {
+				ball.setVelocity(velocity.scaleX(velocity.isRightward() ? 0.5f
+						: 1.5f));
+			} else if (paddle.getVelocity().isLeftward()) {
+				ball.setVelocity(velocity.scaleX(velocity.isLeftward() ? 0.5f : 
+					1.5f));
+			}
+			
+			collisionPoint = posIntercept;
+			ball.setPosition(posIntercept);
+			
 			updateBall(gc, game, delta - Math.round(ud));
 		} else {
 			ball.setPosition(pos2);
 		}
 	}
 	
+	public void updateBall(GameContainer gc, StateBasedGame game, int delta) {
+		if (delta <= 0) return;
+		
+		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
+		
+		Vector2f pos1 = ball.getPosition();
+		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
+		
+		// game area sides
+		
+		Rect area = Rect.fromGameContainer(gc).withoutMargin(ball.getHeight()
+				/ 2);
+		
+		Vector2f velocity = ball.getVelocity();
+		Optional<Vector2f> intercept = Optional.absent();
+		
+		if (velocity.isLeftward()) {
+			intercept = geoUtils.intercepts(pos1, pos2, area.getTopLeft(), 
+					area.getBottomLeft());
+		} else if (velocity.isRightward()) {
+			intercept = geoUtils.intercepts(pos1, pos2, area.getTopRight(),
+					area.getBottomRight());
+		}
+		
+		if (intercept.isPresent()) {
+			ball.setVelocity(velocity.withX(-velocity.getX()));
+		} else {
+			if (velocity.isUpward()) {
+				intercept = geoUtils.intercepts(pos1, pos2, area.getTopLeft(),
+						area.getTopRight());
+			} else if (velocity.isDownward()) {
+				intercept = geoUtils.intercepts(pos1, pos2, 
+						area.getBottomLeft(), area.getBottomRight());
+			}
+			
+			if (intercept.isPresent()) {
+				ball.setVelocity(velocity.withY(-velocity.getY()));
+			}
+		}
+		
+		if (intercept.isPresent()) {		
+			Vector2f posIntercept = intercept.get();
+			collisionPoint = posIntercept;
+			ball.setPosition(posIntercept);
+			
+			// time at which intercept occurs
+			float magIntercept = geoUtils.magnitude(pos1, posIntercept);
+			float magFull = geoUtils.magnitude(pos1, pos2);
+			float ud = delta * magIntercept / magFull;
+			
+			updateBall(gc, game, delta - Math.round(ud));
+		} else {
+			updateBall2(gc, game, delta);
+		}
+	}
+	
 	public Optional<Intercept> ballIntercepts(Vector2f pos1, Vector2f pos2, 
 			Rect rect) {	
-		float nx = pos2.getX() - pos1.getX(),
-				ny = pos2.getY() - pos1.getY();
+		Vector2f path = pos2.subtract(pos1);
 		
 		Optional<Vector2f> interceptsAt = Optional.absent();
 		Side side = null;
 		
 		rect = rect.withMargin(ball.getHeight() / 2);
 		
-		if (nx < 0) {
+		if (path.isLeftward()) {
 			interceptsAt = geoUtils.intercepts(pos1, pos2, 
 					rect.getTopRight(), rect.getBottomRight());
 			side = Side.RIGHT;
-		} else if (nx > 0) {
+		} else if (path.isRightward()) {
 			interceptsAt = geoUtils.intercepts(pos1, pos2, 
 					rect.getTopLeft(), rect.getBottomLeft());
 			side = Side.LEFT;
 		}
 		
 		if (!interceptsAt.isPresent()) {
-			if (ny < 0) {
+			if (path.isUpward()) {
 				interceptsAt = geoUtils.intercepts(pos1, pos2, 
 						rect.getBottomLeft(), rect.getBottomRight());
 				side = Side.BOTTOM;
-			} else if (ny > 0) {
+			} else if (path.isDownward()) {
 				interceptsAt = geoUtils.intercepts(pos1, pos2, 
 						rect.getTopLeft(), rect.getTopRight());
 				side = Side.TOP;
@@ -190,5 +259,15 @@ public class InGame extends EntityBasedState {
 
 		updatePaddle(gc, game, delta);
 		updateBall(gc, game, delta);
+	}
+	
+	@Override
+	public void render(GameContainer gc, StateBasedGame game, 
+			Graphics graphics) throws SlickException {
+		super.render(gc, game, graphics);
+		
+		if (collisionPoint != null)
+			graphics.fillOval(collisionPoint.getX(), 
+					collisionPoint.getY(), 5, 5);
 	}
 }

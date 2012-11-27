@@ -34,7 +34,6 @@ import com.sunderance.weeaboo.Weeaboo.State;
  * @author Robert Berry
  */
 public class InGame extends EntityBasedState {
-	
 	ComponentBasedEntity paddle;
 	private ComponentBasedEntity ball;
 	private List<ComponentBasedEntity> blocks;
@@ -181,9 +180,7 @@ public class InGame extends EntityBasedState {
 		Vector2f pos1 = ball.getPosition();
 		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
 		Vector2f velocity = ball.getVelocity();
-		
-		// paddle
-		
+
 		Optional<Intercept> intercept = 
 				ballIntercepts(pos1, pos2, paddle.getRect());
 		
@@ -220,9 +217,9 @@ public class InGame extends EntityBasedState {
 		
 		Vector2f pos1 = ball.getPosition();
 		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
-		
-		// blocks
+
 		Optional<Intercept> intercept = Optional.absent();
+		Optional<ComponentBasedEntity> blockToKill = Optional.absent();
 		
 		for (ComponentBasedEntity block : blocks) {
 			intercept = ballIntercepts(pos1, pos2, block.getRect());
@@ -230,16 +227,29 @@ public class InGame extends EntityBasedState {
 			if (intercept.isPresent()) {
 				Intercept i = intercept.get();
 				bounceBall(i);
+				blockToKill = Optional.of(block);
 				break;
 			}
 		}
 		
 		if (intercept.isPresent()) {
+			removeBlock(blockToKill.get());
+			
 			updateBall(gc, game, delta - calculateInterceptDelta(pos1, pos2, 
 					intercept.get().getPosition(), delta));
 		} else {
 			ball.setPosition(pos2);
 		}
+	}
+	
+	/**
+	 * Removes block from play
+	 * 
+	 * @param block The block
+	 */
+	private void removeBlock(ComponentBasedEntity block) {
+		removeEntity(block);
+		blocks.remove(block);
 	}
 	
 	/**
@@ -256,9 +266,7 @@ public class InGame extends EntityBasedState {
 		
 		Vector2f pos1 = ball.getPosition();
 		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
-		
-		// game area sides
-		
+
 		Rect area = Rect.fromGameContainer(gc).withoutMargin(ball.getHeight()
 				/ 2);
 		

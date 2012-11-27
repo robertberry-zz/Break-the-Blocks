@@ -1,6 +1,6 @@
 package com.sunderance.weeaboo.states;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
@@ -15,7 +15,7 @@ import com.sunderance.weeaboo.entities.Entity;
 
 abstract public class EntityBasedState extends BaseState {
 
-	List<Entity> entities = new ArrayList<Entity>();
+	List<Entity> entities = new LinkedList<Entity>();
 	
 	EventTimer timer = new EventTimer();
 	
@@ -30,6 +30,15 @@ abstract public class EntityBasedState extends BaseState {
 	 */
 	protected void addEntity(Entity entity) {
 		entities.add(entity);
+	}
+	
+	/**
+	 * Removes an entity from play
+	 * 
+	 * @param entity
+	 */
+	protected void removeEntity(Entity entity) {
+		entities.remove(entity);
 	}
 	
 	/**

@@ -27,6 +27,7 @@ public class Weeaboo extends StateBasedGame {
 	 */
 	public enum State {
 		SPLASH_SCREEN,
+		MENU,
 		IN_GAME,
 		PAUSED,
 		HIGH_SCORES
@@ -42,6 +43,7 @@ public class Weeaboo extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
 		addState(new SplashScreen(State.SPLASH_SCREEN));
+		addState(new Menu(State.MENU));
 		addState(new InGame(State.IN_GAME));
 	}
 

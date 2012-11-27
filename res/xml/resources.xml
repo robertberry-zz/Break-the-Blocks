@@ -19,6 +19,17 @@
   <fonts>
     <font>
       <name>header</name>
+      <family>Arial</family>
+      <size>36</size>
+      <style>plain</style>
+      <colour>
+        <red>100</red>
+        <green>100</green>
+        <blue>200</blue>
+      </colour>
+    </font>
+    <font>
+      <name>splash</name>
       <family>Courier</family>
       <size>24</size>
       <style>plain</style>
@@ -32,6 +43,28 @@
       <name>score</name>
       <family>Courier</family>
       <size>18</size>
+      <style>plain</style>
+      <colour>
+        <red>100</red>
+        <green>200</green>
+        <blue>100</blue>
+      </colour>
+    </font>
+    <font>
+      <name>menu_item</name>
+      <family>Courier</family>
+      <size>20</size>
+      <style>plain</style>
+      <colour>
+        <red>100</red>
+        <green>100</green>
+        <blue>100</blue>
+      </colour>
+    </font>
+    <font>
+      <name>menu_item_selected</name>
+      <family>Courier</family>
+      <size>20</size>
       <style>plain</style>
       <colour>
         <red>100</red>

@@ -21,7 +21,10 @@ import com.sunderance.weeaboo.timed_events.StateTransition;
  * @author Robert Berry
  */
 public class SplashScreen extends EntityBasedState {
+	private static final int DELAY = 1000;
 
+	private static final String TEXT = "Robert Berry (c)";
+	
 	public SplashScreen(State stateID) {
 		super(stateID);
 	}
@@ -32,13 +35,13 @@ public class SplashScreen extends EntityBasedState {
 		WeeabooResources resources = WeeabooResources.getInstance();
 		
 		StringRenderComponent renderTitle = new StringRenderComponent(
-				resources.getFont("header"), game.getTitle());
+				resources.getFont("splash"), TEXT);
 		
 		ComponentBasedEntity title = new ComponentBasedEntity(renderTitle);
 		title.setPosition(Rect.fromGameContainer(gc).getCentre());
 		
 		addEntity(title);
 		
-		addTimedEvent(1000, new StateTransition(game, Weeaboo.State.IN_GAME));
+		addTimedEvent(DELAY, new StateTransition(game, Weeaboo.State.MENU));
 	}
 }

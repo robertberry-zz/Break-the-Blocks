@@ -49,6 +49,11 @@ public class InGame extends EntityBasedState {
 		geoUtils = GeometryUtilities.getInstance();
 	}
 
+	/**
+	 * Places a new paddle into play
+	 * 
+	 * @param gc The game container
+	 */
 	private void newPaddle(GameContainer gc) {
 		EntityFactory entityFactory = EntityFactory.getInstance();		
 		paddle = entityFactory.createPaddle();
@@ -56,6 +61,11 @@ public class InGame extends EntityBasedState {
 		addEntity(paddle);		
 	}
 	
+	/**
+	 * Places a new ball into play
+	 * 
+	 * @param gc The game container
+	 */
 	private void newBall(GameContainer gc) {
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		ball = entityFactory.createBall();
@@ -89,6 +99,13 @@ public class InGame extends EntityBasedState {
 		}
 	}
 	
+	/**
+	 * Updates the position of the paddle
+	 * 
+	 * @param gc The game container
+	 * @param game The game
+	 * @param delta The amount of time passed in ms
+	 */
 	public void updatePaddle(GameContainer gc, 
 			StateBasedGame game, int delta) {
 		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
@@ -107,6 +124,12 @@ public class InGame extends EntityBasedState {
 		paddle.setPosition(newRect.getCentre());
 	}
 	
+	/**
+	 * Bounces the ball from the given intercept. (i.e. places the ball at the
+	 * point of intercept and adjusts the velocity appropriately.)
+	 * 
+	 * @param i The intercept
+	 */
 	public void bounceBall(Intercept i) {
 		Vector2f posIntercept = i.getPosition();
 		Vector2f velocity = ball.getVelocity();
@@ -126,6 +149,17 @@ public class InGame extends EntityBasedState {
 		ball.setPosition(posIntercept);		
 	}
 	
+	/**
+	 * Calculates at what point within the delta the intercept occurs (i.e.
+	 * exactly when the ball collides with the object).
+	 * 
+	 * @param initial The initial position
+	 * @param end The position that the ball would have moved to in the time
+	 *   delta had it not collided with something
+	 * @param intercept The point at which the ball collided with something
+	 * @param delta The amount of time passed in ms
+	 * @return The amount of time passed in ms when the ball collided
+	 */
 	int calculateInterceptDelta(Vector2f initial, Vector2f end, 
 			Vector2f intercept, int delta) {
 		float magIntercept = geoUtils.magnitude(initial, intercept);
@@ -134,6 +168,13 @@ public class InGame extends EntityBasedState {
 		return Math.round(delta * magIntercept / magFull);
 	}
 	
+	/**
+	 * Detects for collisions between the ball and the paddle
+	 * 
+	 * @param gc The game container
+	 * @param game The game
+	 * @param delta Amount of time passed in ms
+	 */
 	public void updateBall2(GameContainer gc, StateBasedGame game, int delta) {
 		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
 		
@@ -167,6 +208,13 @@ public class InGame extends EntityBasedState {
 		}
 	}
 	
+	/**
+	 * Detects for collisions between the ball and the blocks
+	 * 
+	 * @param gc The game container
+	 * @param game The game
+	 * @param delta The amount of time passed in ms
+	 */
 	public void updateBall3(GameContainer gc, StateBasedGame game, int delta) {
 		MechanicsUtilities mechanicsUtils = MechanicsUtilities.getInstance();
 		
@@ -194,6 +242,13 @@ public class InGame extends EntityBasedState {
 		}
 	}
 	
+	/**
+	 * Detects for collisions between the ball and the side of the play area
+	 * 
+	 * @param gc The game container
+	 * @param game The game
+	 * @param delta The amount of time passed in ms
+	 */
 	public void updateBall(GameContainer gc, StateBasedGame game, int delta) {
 		if (delta <= 0) return;
 		
@@ -246,6 +301,15 @@ public class InGame extends EntityBasedState {
 		}
 	}
 	
+	/**
+	 * Whether the path of the ball from pos1 to pos2 intercepts the given
+	 * rectangle
+	 * 
+	 * @param pos1 Initial position
+	 * @param pos2 End position
+	 * @param rect The rectangle
+	 * @return An optional intercept
+	 */
 	public Optional<Intercept> ballIntercepts(Vector2f pos1, Vector2f pos2, 
 			Rect rect) {	
 		Vector2f path = pos2.subtract(pos1);

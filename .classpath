@@ -3,14 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/lwjgl.jar">
+	<classpathentry kind="lib" path="/home/robert/workspace/Break-the-Blocks/lib/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/robert/workspace/Weeaboo/lib"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Break-the-Blocks/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/slick.jar"/>
-	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/xom-1.2.8.jar"/>
-	<classpathentry kind="lib" path="/home/robert/workspace/Weeaboo/lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/robert/workspace/Break-the-Blocks/lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="/home/robert/workspace/Break-the-Blocks/lib/slick.jar"/>
+	<classpathentry kind="lib" path="/home/robert/workspace/Break-the-Blocks/lib/xom-1.2.8.jar"/>
+	<classpathentry kind="lib" path="/home/robert/workspace/Break-the-Blocks/lib/guava-13.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

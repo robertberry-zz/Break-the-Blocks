@@ -3,7 +3,7 @@
  */
 package com.sunderance.slick_utils;
 
-import com.sunderance.weeaboo.entities.Entity;
+import com.sunderance.break_the_blocks.entities.Entity;
 
 /**
  * Utilities class for mechanics-related operations

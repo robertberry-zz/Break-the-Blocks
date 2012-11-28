@@ -22,6 +22,7 @@ import com.sunderance.slick_utils.Intercept;
 import com.sunderance.slick_utils.MechanicsUtilities;
 import com.sunderance.slick_utils.Rect;
 import com.sunderance.slick_utils.Side;
+import com.sunderance.slick_utils.TimedEvent;
 import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.WeeabooResources;
 import com.sunderance.weeaboo.components.HasLives;
@@ -31,7 +32,8 @@ import com.sunderance.weeaboo.components.Scoring;
 import com.sunderance.weeaboo.entities.BlockFactory;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 import com.sunderance.weeaboo.entities.EntityFactory;
-import com.sunderance.weeaboo.timed_events.SetVelocity;
+import com.sunderance.weeaboo.timed_events.MessageListener;
+import com.sunderance.weeaboo.timed_events.SendMessage;
 import com.sunderance.weeaboo.Weeaboo.State;
 
 /**
@@ -39,7 +41,8 @@ import com.sunderance.weeaboo.Weeaboo.State;
  * 
  * @author Robert Berry
  */
-public class InGame extends EntityBasedState implements Scoring, HasLives {
+public class InGame extends EntityBasedState implements Scoring, HasLives,
+		MessageListener<InGame.Messages> {
 	private ComponentBasedEntity paddle;
 	private ComponentBasedEntity ball;
 	private List<ComponentBasedEntity> blocks;
@@ -48,7 +51,8 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	private static final int SCORE_LENGTH = 8;
 	private static final int INITIAL_LIVES = 3;
 	private static final int MAX_LIVES = 3;
-	private static final int BALL_DROP_DELAY = 500;
+	private static final int BALL_RELEASE_DELAY = 2000;
+	private static final int NEW_BALL_DELAY = 200;
 	
 	private boolean showCollisionMarker = false;
 	
@@ -58,6 +62,18 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	
 	private int score = 0;
 	private int lives = INITIAL_LIVES;
+	private boolean ballReleased = false;
+	
+	private GameContainer gc;
+	
+	public enum Messages {
+		NEW_BALL,
+		RELEASE_BALL;
+		
+		public TimedEvent toEvent(InGame state) {
+			return new SendMessage<InGame.Messages>(state, this);
+		}
+	}
 	
 	public InGame(State stateID) {
 		super(stateID);
@@ -69,7 +85,7 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	 * 
 	 * @param gc The game container
 	 */
-	private void newPaddle(GameContainer gc) {
+	private void newPaddle() {
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		Rect gcRect = Rect.fromGameContainer(gc);
 		
@@ -87,17 +103,18 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	 * 
 	 * @param gc The game container
 	 */
-	private void newBall(GameContainer gc) {
+	private void newBall() {
 		EntityFactory entityFactory = EntityFactory.getInstance();
 		
 		if (ball != null)
 			removeEntity(ball);
 		
+		ballReleased = false;
+		
 		ball = entityFactory.createBall();
 		ball.setPosition(Rect.fromGameContainer(gc).getCentre());
 		
-		addTimedEvent(BALL_DROP_DELAY, new SetVelocity(ball,
-				new Vector2f(0.1f, BALL_INITIAL_SPEED)));
+		addTimedEvent(BALL_RELEASE_DELAY, Messages.RELEASE_BALL.toEvent(this));
 		
 		addEntity(ball);
 	}
@@ -105,8 +122,9 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	@Override
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
-		newBall(gc);
-		newPaddle(gc);
+		this.gc = gc;
+		newBall();
+		newPaddle();
 		
 		WeeabooResources resources = WeeabooResources.getInstance();
 		Rect gcRect = Rect.fromGameContainer(gc);
@@ -353,9 +371,9 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 						area.getBottomLeft(), area.getBottomRight());
 				
 				if (intercept.isPresent()) {
-					newBall(gc);
-					newPaddle(gc);
-					loseLife();
+					ball.setPosition(pos2);
+					addTimedEvent(NEW_BALL_DELAY, new SendMessage<Messages>(
+							this, Messages.NEW_BALL));
 					return;
 				}
 			}
@@ -435,7 +453,13 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 		super.update(gc, game, delta);
 
 		updatePaddle(gc, game, delta);
-		updateBall(gc, game, delta);
+		
+		if (ballReleased) {
+			updateBall(gc, game, delta);
+		} else {
+			ball.setPosition(paddle.getPosition().addY(-(ball.getHeight()
+					+ paddle.getHeight()) / 2));
+		}
 	}
 	
 	@Override
@@ -456,5 +480,22 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	@Override
 	public int getLives() {
 		return lives;
+	}
+
+	@Override
+	public void tell(Messages message) {
+		switch (message) {
+		case RELEASE_BALL:
+			ballReleased = true;
+			ball.setVelocity(new Vector2f(0.2f, -BALL_INITIAL_SPEED));
+			break;
+		case NEW_BALL:
+			newBall();
+			newPaddle();
+			loseLife();
+			break;
+		default:
+			break;
+		}
 	}
 }

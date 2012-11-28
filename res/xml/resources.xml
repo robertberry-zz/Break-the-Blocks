@@ -13,6 +13,14 @@
       <name>blue_block</name>
       <path>blocks/blue.png</path>
     </image>
+    <image>
+      <name>life</name>
+      <path>life.png</path>
+    </image>
+    <image>
+      <name>spent_life</name>
+      <path>spent-life.png</path>
+    </image>
   </images>
   <sounds>
   </sounds>

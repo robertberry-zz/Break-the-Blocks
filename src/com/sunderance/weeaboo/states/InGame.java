@@ -24,6 +24,8 @@ import com.sunderance.slick_utils.Rect;
 import com.sunderance.slick_utils.Side;
 import com.sunderance.slick_utils.Vector2f;
 import com.sunderance.weeaboo.WeeabooResources;
+import com.sunderance.weeaboo.components.HasLives;
+import com.sunderance.weeaboo.components.LivesRenderComponent;
 import com.sunderance.weeaboo.components.ScoreRenderComponent;
 import com.sunderance.weeaboo.components.Scoring;
 import com.sunderance.weeaboo.entities.BlockFactory;
@@ -36,19 +38,22 @@ import com.sunderance.weeaboo.Weeaboo.State;
  * 
  * @author Robert Berry
  */
-public class InGame extends EntityBasedState implements Scoring {
+public class InGame extends EntityBasedState implements Scoring, HasLives {
 	private ComponentBasedEntity paddle;
 	private ComponentBasedEntity ball;
 	private List<ComponentBasedEntity> blocks;
 	
 	private static final float BALL_INITIAL_SPEED = 0.4f;
 	private static final int SCORE_LENGTH = 8;
+	private static final int INITIAL_LIVES = 3;
+	private static final int MAX_LIVES = 3;
 	
 	private GeometryUtilities geoUtils;
 	
 	private Vector2f collisionPoint;
 	
 	private int score = 0;
+	private int lives = INITIAL_LIVES;
 	
 	public InGame(State stateID) {
 		super(stateID);
@@ -91,13 +96,25 @@ public class InGame extends EntityBasedState implements Scoring {
 		newPaddle(gc);
 		
 		WeeabooResources resources = WeeabooResources.getInstance();
+		Rect gcRect = Rect.fromGameContainer(gc);
+		
 		ScoreRenderComponent scoreRender = new ScoreRenderComponent(
 				resources.getFont("score"), this, SCORE_LENGTH);
 		ComponentBasedEntity scoreView = new ComponentBasedEntity(scoreRender);
-		scoreView.setPosition(Rect.fromGameContainer(gc).getBottomRight()
+		scoreView.setPosition(gcRect.getBottomRight()
 				.subtract(scoreView.getDimensions().scale(0.5f))
 				.subtract(new Vector2f(5, 5)));
 		addEntity(scoreView);
+		
+		LivesRenderComponent livesRender = new LivesRenderComponent(this,
+			resources.getImage("life"), resources.getImage("spent_life"),
+			MAX_LIVES, 5);
+		ComponentBasedEntity livesView = new ComponentBasedEntity(livesRender);
+		livesView.setPosition(gcRect.getBottomLeft()
+				.addX(livesView.getWidth() / 2)
+				.addY(-livesView.getHeight() / 2)
+				.add(new Vector2f(5, -5)));
+		addEntity(livesView);
 		
 		BlockFactory blockFactory = BlockFactory.getInstance();
 		
@@ -399,5 +416,10 @@ public class InGame extends EntityBasedState implements Scoring {
 	@Override
 	public int getScore() {
 		return score;
+	}
+
+	@Override
+	public int getLives() {
+		return lives;
 	}
 }

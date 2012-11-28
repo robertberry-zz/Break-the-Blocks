@@ -28,12 +28,23 @@
     <font>
       <name>header</name>
       <family>Arial</family>
-      <size>36</size>
+      <size>38</size>
       <style>plain</style>
       <colour>
         <red>100</red>
         <green>100</green>
         <blue>200</blue>
+      </colour>
+    </font>
+    <font>
+      <name>press_key</name>
+      <family>Arial</family>
+      <size>24</size>
+      <style>plain</style>
+      <colour>
+        <red>100</red>
+        <green>100</green>
+        <blue>100</blue>
       </colour>
     </font>
     <font>

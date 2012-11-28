@@ -44,6 +44,7 @@ public class Weeaboo extends StateBasedGame {
 	public void initStatesList(GameContainer gc) throws SlickException {
 		addState(new SplashScreen(State.SPLASH_SCREEN));
 		addState(new Menu(State.MENU));
+		addState(new HighScores(State.HIGH_SCORES));
 		addState(new InGame(State.IN_GAME));
 	}
 

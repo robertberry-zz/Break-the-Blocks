@@ -14,8 +14,7 @@ import com.sunderance.weeaboo.entities.ComponentBasedEntity;
  * @author Robert Berry
  */
 public class PaddleMovementComponent extends UpdateComponent {
-	private float maxSpeed;
-	private float acceleration;
+	private float speed;
 
 	/**
 	 * Creates a paddle movement component that moves the paddle at the given
@@ -23,11 +22,9 @@ public class PaddleMovementComponent extends UpdateComponent {
 	 * 
 	 * @param speed How many pixels per ms the paddle moves
 	 */
-	public PaddleMovementComponent(float maxSpeed, 
-			float acceleration) {
+	public PaddleMovementComponent(float speed) {
 		super();
-		this.maxSpeed = maxSpeed;
-		this.acceleration = acceleration;
+		this.speed = speed;
 	}
 
 	@Override
@@ -36,31 +33,12 @@ public class PaddleMovementComponent extends UpdateComponent {
 		
 		ComponentBasedEntity owner = getOwner();
 		
-		float xSpeed = Math.abs(owner.getVelocity().getX());
-		boolean aboveMax = xSpeed >= maxSpeed;
-		int movement = 0;
-		
 		if (input.isKeyDown(Input.KEY_LEFT)) {
-			movement = -1;
+			owner.setVelocity(new Vector2f(-speed, 0));
 		} else if (input.isKeyDown(Input.KEY_RIGHT)) {
-			movement = 1;
-		}
-		
-		if (movement == 0) {
-			if (owner.getVelocity().getX() > 0) {
-				owner.setAcceleration(new Vector2f(-acceleration, 0));
-			} else if (owner.getVelocity().getX() < 0) {
-				owner.setAcceleration(new Vector2f(acceleration, 0));
-			} else {
-				owner.setAcceleration(Vector2f.zero());
-			}
+			owner.setVelocity(new Vector2f(speed, 0));
 		} else {
-			if (aboveMax) {
-				owner.setAcceleration(Vector2f.zero());
-				owner.setVelocity(new Vector2f(maxSpeed * movement, 0));
-			} else {
-				owner.setAcceleration(new Vector2f(acceleration * movement, 0));
-			}
+			owner.setVelocity(Vector2f.zero());
 		}
 	}
 }

@@ -46,8 +46,7 @@ public class MechanicsUtilities {
 		
 		return velocity
 				.add(entity.getAcceleration()
-						.scale(delta)
-						.scale(velocity.sgn()));
+						.scale(delta));
 	}
 	
 	/**

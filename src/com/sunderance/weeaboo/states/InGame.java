@@ -148,6 +148,8 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 		
 		Vector2f newPaddlePosition = mechanicsUtils.getNextPosition(paddle, 
 				delta);
+		Vector2f newPaddleVelocity = mechanicsUtils.getNextVelocity(paddle, 
+				delta);
 		Rect newRect = paddle.getRect().withCentre(newPaddlePosition);
 		
 		if (newRect.getLeft() < 0) {
@@ -156,6 +158,8 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 		} else if (newRect.getRight() > gc.getWidth()) {
 			newRect = newRect.withRight(gc.getWidth());
 			paddle.stop();
+		} else {
+			paddle.setVelocity(newPaddleVelocity);
 		}
 		paddle.setPosition(newRect.getCentre());
 	}
@@ -225,11 +229,14 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 			Intercept i = intercept.get();
 			bounceBall(i);
 			
+			Vector2f paddleVelocity = paddle.getVelocity();
+			velocity = ball.getVelocity();
+			
 			// add spin based on paddle velocity
-			if (paddle.getVelocity().isRightward()) {
+			if (paddleVelocity.isRightward()) {
 				ball.setVelocity(velocity.scaleX(velocity.isRightward() ? 0.5f
 						: 1.5f));
-			} else if (paddle.getVelocity().isLeftward()) {
+			} else if (paddleVelocity.isLeftward()) {
 				ball.setVelocity(velocity.scaleX(velocity.isLeftward() ? 0.5f : 
 					1.5f));
 			}

@@ -38,7 +38,7 @@ public class EntityFactory {
 				new ImageRenderComponent(paddleImage);
 		
 		ComponentBasedEntity paddle = new ComponentBasedEntity(renderPaddle);
-		paddle.addUpdateComponent(new PaddleMovementComponent(0.05f, 0.1f));
+		paddle.addUpdateComponent(new PaddleMovementComponent(0.5f));
 		
 		return paddle;
 	}

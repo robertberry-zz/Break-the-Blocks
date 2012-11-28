@@ -182,11 +182,11 @@ public class Vector2f {
 		return Objects.hashCode(x, y);
 	}
 
-	public Vector2f addX(int i) {
+	public Vector2f addX(float i) {
 		return new Vector2f(x + i, y);
 	}
 	
-	public Vector2f addY(int i) {
+	public Vector2f addY(float i) {
 		return new Vector2f(x, y + i);
 	}
 }

@@ -31,6 +31,7 @@ import com.sunderance.weeaboo.components.Scoring;
 import com.sunderance.weeaboo.entities.BlockFactory;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 import com.sunderance.weeaboo.entities.EntityFactory;
+import com.sunderance.weeaboo.timed_events.SetVelocity;
 import com.sunderance.weeaboo.Weeaboo.State;
 
 /**
@@ -47,6 +48,9 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	private static final int SCORE_LENGTH = 8;
 	private static final int INITIAL_LIVES = 3;
 	private static final int MAX_LIVES = 3;
+	private static final int BALL_DROP_DELAY = 500;
+	
+	private boolean showCollisionMarker = false;
 	
 	private GeometryUtilities geoUtils;
 	
@@ -67,8 +71,10 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	 */
 	private void newPaddle(GameContainer gc) {
 		EntityFactory entityFactory = EntityFactory.getInstance();
-		
 		Rect gcRect = Rect.fromGameContainer(gc);
+		
+		if (paddle != null)
+			removeEntity(paddle);
 		
 		paddle = entityFactory.createPaddle();
 		paddle.setPosition(gcRect.getBottomCentre().subtract(new Vector2f(
@@ -83,9 +89,16 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 	 */
 	private void newBall(GameContainer gc) {
 		EntityFactory entityFactory = EntityFactory.getInstance();
+		
+		if (ball != null)
+			removeEntity(ball);
+		
 		ball = entityFactory.createBall();
 		ball.setPosition(Rect.fromGameContainer(gc).getCentre());
-		ball.setVelocity(new Vector2f(0.1f, BALL_INITIAL_SPEED));
+		
+		addTimedEvent(BALL_DROP_DELAY, new SetVelocity(ball,
+				new Vector2f(0.1f, BALL_INITIAL_SPEED)));
+		
 		addEntity(ball);
 	}
 	
@@ -332,25 +345,40 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 			if (velocity.isUpward()) {
 				intercept = geoUtils.intercepts(pos1, pos2, area.getTopLeft(),
 						area.getTopRight());
+				if (intercept.isPresent()) {
+					ball.setVelocity(velocity.withY(-velocity.getY()));
+				}
 			} else if (velocity.isDownward()) {
 				intercept = geoUtils.intercepts(pos1, pos2, 
 						area.getBottomLeft(), area.getBottomRight());
-			}
-			
-			if (intercept.isPresent()) {
-				ball.setVelocity(velocity.withY(-velocity.getY()));
+				
+				if (intercept.isPresent()) {
+					newBall(gc);
+					newPaddle(gc);
+					loseLife();
+					return;
+				}
 			}
 		}
 		
 		if (intercept.isPresent()) {		
 			Vector2f posIntercept = intercept.get();
 			collisionPoint = posIntercept;
+			
 			ball.setPosition(posIntercept);
 			
 			updateBall(gc, game, delta - calculateInterceptDelta(pos1, pos2, 
 					posIntercept, delta));
 		} else {
 			updateBall2(gc, game, delta);
+		}
+	}
+	
+	private void loseLife() {
+		lives -= 1;
+		
+		if (lives == 0) {
+			// game over!
 		}
 	}
 	
@@ -415,7 +443,7 @@ public class InGame extends EntityBasedState implements Scoring, HasLives {
 			Graphics graphics) throws SlickException {
 		super.render(gc, game, graphics);
 		
-		if (collisionPoint != null)
+		if (showCollisionMarker && collisionPoint != null)
 			graphics.fillOval(collisionPoint.getX(), 
 					collisionPoint.getY(), 5, 5);
 	}

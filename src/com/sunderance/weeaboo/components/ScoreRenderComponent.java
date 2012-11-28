@@ -8,17 +8,18 @@ import org.newdawn.slick.state.StateBasedGame;
 import com.sunderance.slick_utils.Vector2f;
 
 public class ScoreRenderComponent extends RenderComponent {
-	UnicodeFont font;
-	Scoring scoring;
-	int length;
-	String format;
+	private UnicodeFont font;
+	private Scoring scoring;
+	private String format;
+	private int score;
+	private float incrementPerMs = 0.5f;
 	
 	public ScoreRenderComponent(UnicodeFont font, Scoring scoring, int length) {
 		super();
 		this.font = font;
 		this.scoring = scoring;
-		this.length = length;
 		this.format = "%0" + Integer.toString(length) + "d";
+		score = scoring.getScore();
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class ScoreRenderComponent extends RenderComponent {
 	}
 
 	private String getScoreString() {
-		return String.format(format, scoring.getScore());
+		return String.format(format, score);
 	}
 	
 	@Override
@@ -45,6 +46,11 @@ public class ScoreRenderComponent extends RenderComponent {
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int delta) {
-		// do nothing
+		int properScore = scoring.getScore();
+		
+		if (score < properScore) {
+			score = (int) Math.min(properScore, 
+					score + delta * incrementPerMs);
+		}
 	}
 }

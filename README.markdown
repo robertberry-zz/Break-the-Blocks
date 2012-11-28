@@ -1,10 +1,10 @@
-# Weeaboo
+# Break the Blocks!
 
-Java/Slick implementation of a paddle and ball game.
+Java implementation of a Breakout clone.
 
 ## Controls
 
-Use arrow keys to move left and right.
+Use arrow keys to move left and right. Press space to release the ball.
 
 ## License
 

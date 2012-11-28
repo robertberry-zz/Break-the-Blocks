@@ -81,6 +81,17 @@
       </colour>
     </font>
     <font>
+      <name>high_scores</name>
+      <family>Courier</family>
+      <size>20</size>
+      <style>plain</style>
+      <colour>
+        <red>100</red>
+        <green>100</green>
+        <blue>100</blue>
+      </colour>
+    </font>
+    <font>
       <name>menu_item_selected</name>
       <family>Courier</family>
       <size>20</size>

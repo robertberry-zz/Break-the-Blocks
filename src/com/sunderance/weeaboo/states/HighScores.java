@@ -6,9 +6,11 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.sunderance.slick_utils.Rect;
+import com.sunderance.slick_utils.ScoreTable;
 import com.sunderance.weeaboo.Weeaboo;
 import com.sunderance.weeaboo.WeeabooResources;
 import com.sunderance.weeaboo.Weeaboo.State;
+import com.sunderance.weeaboo.components.ScoreTableRenderComponent;
 import com.sunderance.weeaboo.components.StringRenderComponent;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
@@ -17,6 +19,8 @@ public class HighScores extends EntityBasedState {
 	private static final String TITLE = "High Scores";
 	private static final String PRESS_KEY_TEXT = 
 			"Press enter to return to menu";
+	
+	private ComponentBasedEntity scoreTable;
 	
 	public HighScores(State stateID) {
 		super(stateID);
@@ -43,6 +47,22 @@ public class HighScores extends EntityBasedState {
 		addEntity(pressKey);
 		
 		
+	}
+	
+	@Override
+	public void enter(GameContainer gc, StateBasedGame game) {
+		if (scoreTable != null)
+			removeEntity(scoreTable);
+		
+		WeeabooResources resources = WeeabooResources.getInstance();
+		ScoreTable scores = resources.getHighScores();
+		
+		ScoreTableRenderComponent renderScores = new ScoreTableRenderComponent(
+				resources.getFont("high_scores"), scores, 10);
+		scoreTable = new ComponentBasedEntity(
+				renderScores);
+		scoreTable.setPosition(Rect.fromGameContainer(gc).getCentre());
+		addEntity(scoreTable);
 	}
 
 	@Override

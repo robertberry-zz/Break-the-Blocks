@@ -1,0 +1,6 @@
+element scores {
+  element score {
+    element name { text },
+    element value { xsd:integer }
+  }+
+}

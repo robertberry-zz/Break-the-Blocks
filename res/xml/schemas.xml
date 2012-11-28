@@ -2,4 +2,5 @@
 <locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
   <uri resource="level1.xml" uri="level.rnc"/>
   <uri resource="resources.xml" uri="resources.rnc"/>
+  <uri resource="high_scores.xml" uri="high_scores.rnc"/>
 </locatingRules>

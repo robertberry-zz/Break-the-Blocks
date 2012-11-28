@@ -10,6 +10,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.UnicodeFont;
 
 import com.sunderance.slick_utils.ResourceManager;
+import com.sunderance.slick_utils.ScoreTable;
 
 /**
  * Singleton for managing game resources
@@ -18,17 +19,23 @@ import com.sunderance.slick_utils.ResourceManager;
  */
 public class WeeabooResources {
 	private static final String DEFINITIONS_PATH = "res/xml/resources.xml";
+	private static final String SCORES_PATH = "res/xml/high_scores.xml";
+	private static final int NUMBER_HIGH_SCORES = 10;
 	
 	private static WeeabooResources instance;
 	
-	ResourceManager manager;
+	private ScoreTable highScores;
+	
+	private ResourceManager manager;
 	
 	private WeeabooResources() {
 		File definitions = new File(DEFINITIONS_PATH);
+		File scores = new File(SCORES_PATH);
 		
 		// TODO clean this up
 		try {
 			manager = ResourceManager.fromFile(definitions);
+			highScores = ScoreTable.fromFile(scores);
 		} catch (ValidityException e) {
 			e.printStackTrace();
 		} catch (ParsingException e) {
@@ -36,6 +43,27 @@ public class WeeabooResources {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * The high scores
+	 * 
+	 * @return The scores
+	 */
+	public ScoreTable getHighScores() {
+		return highScores;
+	}
+	
+	/**
+	 * Adds a high score with the given name and score
+	 * 
+	 * @param name Name of the scorer
+	 * @param score Their score
+	 */
+	public void addHighScore(String name, int score) {
+		ScoreTable.Entry entry = new ScoreTable.Entry(name, score);
+		
+		highScores = highScores.with(entry).take(NUMBER_HIGH_SCORES);
 	}
 	
 	/**

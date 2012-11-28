@@ -71,14 +71,6 @@
     <x>50</x>
     <y>80</y>
   </block>
-
-
-  <block>
-    <type>basic</type>
-    <image_name>blue_block</image_name>
-    <x>50</x>
-    <y>80</y>
-  </block>
   <block>
     <type>basic</type>
     <image_name>blue_block</image_name>

@@ -12,6 +12,7 @@ import com.sunderance.weeaboo.Weeaboo.State;
 import com.sunderance.weeaboo.components.EnterStateMenuItem;
 import com.sunderance.weeaboo.components.MenuItem;
 import com.sunderance.weeaboo.components.MenuRenderComponent;
+import com.sunderance.weeaboo.components.QuitMenuItem;
 import com.sunderance.weeaboo.components.StringRenderComponent;
 import com.sunderance.weeaboo.entities.ComponentBasedEntity;
 
@@ -40,11 +41,12 @@ public class Menu extends EntityBasedState {
 				Weeaboo.State.IN_GAME);
 		MenuItem highScores = new EnterStateMenuItem("High scores", game,
 				Weeaboo.State.HIGH_SCORES);
+		MenuItem quit = new QuitMenuItem("Quit", gc);
 		
 		MenuRenderComponent menuRender = new MenuRenderComponent(
 				resources.getFont("menu_item"), 
 				resources.getFont("menu_item_selected"),
-				ImmutableList.of(startGame, highScores),
+				ImmutableList.of(startGame, highScores, quit),
 				10);
 		
 		ComponentBasedEntity menu = new ComponentBasedEntity(menuRender);

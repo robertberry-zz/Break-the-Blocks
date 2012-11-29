@@ -13,6 +13,7 @@ import nu.xom.Elements;
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Iterables;
@@ -160,5 +161,19 @@ public class ScoreTable implements Iterable<ScoreTable.Entry> {
 	 */
 	public int size() {
 		return entries.size();
+	}
+	
+	/**
+	 * Iterator for the scores in the table
+	 * 
+	 * @return The iterator
+	 */
+	public Iterable<Integer> scores() {
+		return Iterables.transform(entries, new Function<Entry, Integer>() {
+			@Override
+			public Integer apply(Entry entry) {
+				return entry.getScore();
+			}
+		});
 	}
 }

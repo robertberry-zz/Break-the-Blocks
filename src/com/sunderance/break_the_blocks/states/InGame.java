@@ -18,6 +18,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.google.common.base.Optional;
+import com.sunderance.break_the_blocks.BreakTheBlocks;
 import com.sunderance.break_the_blocks.BreakTheBlocksResources;
 import com.sunderance.break_the_blocks.BreakTheBlocks.State;
 import com.sunderance.break_the_blocks.components.HasLives;
@@ -400,11 +401,26 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 		}
 	}
 	
+	/**
+	 * Subtracts a life
+	 */
 	private void loseLife() {
 		lives -= 1;
 		
 		if (lives == 0) {
-			// game over!
+			gameOver();
+		}
+	}
+	
+	/**
+	 * Triggers game over
+	 */
+	private void gameOver() {
+		BreakTheBlocksResources resources = 
+				BreakTheBlocksResources.getInstance();
+		
+		if (resources.isHighScore(score)) {
+			
 		}
 	}
 	
@@ -473,6 +489,8 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 		
 		if (input.isKeyPressed(Input.KEY_SPACE)) {
 			releaseBall();
+		} else if (input.isKeyPressed(Input.KEY_P)) {
+			game.enterState(BreakTheBlocks.State.PAUSED.ordinal());
 		}
 	}
 	

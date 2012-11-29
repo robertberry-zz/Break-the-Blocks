@@ -2,6 +2,7 @@ package com.sunderance.break_the_blocks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 
 import nu.xom.ParsingException;
 import nu.xom.ValidityException;
@@ -9,6 +10,7 @@ import nu.xom.ValidityException;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.UnicodeFont;
 
+import com.google.common.collect.Iterables;
 import com.sunderance.slick_utils.ResourceManager;
 import com.sunderance.slick_utils.ScoreTable;
 
@@ -52,6 +54,19 @@ public class BreakTheBlocksResources {
 	 */
 	public ScoreTable getHighScores() {
 		return highScores;
+	}
+	
+	/**
+	 * Whether the given score would appear in the high scores table
+	 * 
+	 * @param score The score
+	 * @return Whether high score
+	 */
+	public boolean isHighScore(int score) {
+		for (int s : highScores.scores()) {
+			if (score > s) return true;
+		}
+		return false;
 	}
 	
 	/**

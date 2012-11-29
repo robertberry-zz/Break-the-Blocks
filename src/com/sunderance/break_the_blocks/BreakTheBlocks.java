@@ -46,6 +46,7 @@ public class BreakTheBlocks extends StateBasedGame {
 		addState(new SplashScreen(State.SPLASH_SCREEN));
 		addState(new Menu(State.MENU));
 		addState(new HighScores(State.HIGH_SCORES));
+		addState(new PauseState(State.PAUSED));
 		addState(new InGame(State.IN_GAME));
 	}
 

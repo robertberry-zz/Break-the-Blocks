@@ -67,6 +67,7 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 	private boolean ballReleased = false;
 	
 	private GameContainer gc;
+	private StateBasedGame game;
 	
 	public enum Messages {
 		NEW_BALL,
@@ -125,6 +126,7 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
 		this.gc = gc;
+		this.game = game;
 		newBall();
 		newPaddle();
 		
@@ -416,12 +418,7 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 	 * Triggers game over
 	 */
 	private void gameOver() {
-		BreakTheBlocksResources resources = 
-				BreakTheBlocksResources.getInstance();
-		
-		if (resources.isHighScore(score)) {
-			
-		}
+		game.enterState(BreakTheBlocks.State.GAME_OVER.ordinal());
 	}
 	
 	/**

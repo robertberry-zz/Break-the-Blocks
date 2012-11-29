@@ -14,36 +14,44 @@ import com.sunderance.break_the_blocks.components.StringRenderComponent;
 import com.sunderance.break_the_blocks.entities.ComponentBasedEntity;
 import com.sunderance.slick_utils.Rect;
 
-/**
- * Paused game state
- * 
- * @author Robert Berry
- */
-public class PauseState extends EntityBasedState {
-	private static final String PAUSE_TEXT = "Paused";
-	private GameState gameState;
+public class GameOverState extends EntityBasedState {
+	private static final String GAME_OVER_TEXT = "Game over!";
 	
-	public PauseState(State stateID) {
+	private GameState gameState;
+	int finalScore;
+	boolean isHighScore;
+
+	public GameOverState(State stateID) {
 		super(stateID);
 	}
 
 	@Override
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
-		gameState = game.getState(BreakTheBlocks.State.IN_GAME.ordinal());
-		
 		BreakTheBlocksResources resources = 
-				BreakTheBlocksResources.getInstance();
+				BreakTheBlocksResources.getInstance();		
+		
 		Rect gcRect = Rect.fromGameContainer(gc);
 		
-		StringRenderComponent renderPaused = new StringRenderComponent(
-				resources.getFont("header"), PAUSE_TEXT);
-		ComponentBasedEntity pausedText = 
-				new ComponentBasedEntity(renderPaused);
-		pausedText.setPosition(gcRect.getCentre());
-		addEntity(pausedText);
+		gameState = game.getState(BreakTheBlocks.State.IN_GAME.ordinal());
+		
+		StringRenderComponent renderGameOver = new StringRenderComponent(
+				resources.getFont("header"), GAME_OVER_TEXT);
+		ComponentBasedEntity gameOverText = 
+				new ComponentBasedEntity(renderGameOver);
+		gameOverText.setPosition(gcRect.getCentre());
+		
+		addEntity(gameOverText);
 	}
-
+	
+	public void enter(GameContainer gc, StateBasedGame game) {
+		BreakTheBlocksResources resources = 
+				BreakTheBlocksResources.getInstance();		
+		
+		finalScore = ((InGame) gameState).getScore();
+		isHighScore = resources.isHighScore(finalScore);		
+	}
+	
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, 
 			Graphics graphics) throws SlickException {
@@ -52,14 +60,14 @@ public class PauseState extends EntityBasedState {
 	}
 	
 	@Override
-	public void update(GameContainer gc, StateBasedGame game, int delta) 
+	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		super.update(gc, game, delta);
 		
 		Input input = gc.getInput();
 		
-		if (input.isKeyPressed(Input.KEY_P)) {
-			game.enterState(BreakTheBlocks.State.IN_GAME.ordinal());
+		if (input.isKeyPressed(Input.KEY_ENTER)) {
+			game.enterState(BreakTheBlocks.State.MENU.ordinal());
 		}
 	}
 }

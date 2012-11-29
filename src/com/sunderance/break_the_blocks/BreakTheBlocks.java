@@ -31,7 +31,8 @@ public class BreakTheBlocks extends StateBasedGame {
 		MENU,
 		IN_GAME,
 		PAUSED,
-		HIGH_SCORES
+		HIGH_SCORES,
+		GAME_OVER
 	}
 	
 	public BreakTheBlocks() {
@@ -48,6 +49,7 @@ public class BreakTheBlocks extends StateBasedGame {
 		addState(new HighScores(State.HIGH_SCORES));
 		addState(new PauseState(State.PAUSED));
 		addState(new InGame(State.IN_GAME));
+		addState(new GameOverState(State.GAME_OVER));
 	}
 
 	/**

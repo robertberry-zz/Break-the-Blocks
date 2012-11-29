@@ -294,25 +294,32 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 		Vector2f pos1 = ball.getPosition();
 		Vector2f pos2 = mechanicsUtils.getNextPosition(ball, delta);
 
-		Optional<Intercept> intercept = Optional.absent();
+		Optional<Intercept> closestIntercept = Optional.absent();
 		Optional<ComponentBasedEntity> blockToKill = Optional.absent();
 		
 		for (ComponentBasedEntity block : blocks) {
-			intercept = ballIntercepts(pos1, pos2, block.getRect());
+			Optional<Intercept> intercept = 
+					ballIntercepts(pos1, pos2, block.getRect());
 			
 			if (intercept.isPresent()) {
 				Intercept i = intercept.get();
-				bounceBall(i);
-				blockToKill = Optional.of(block);
-				break;
+				
+				if (!closestIntercept.isPresent() ||
+						geoUtils.magnitude(pos1, i.getPosition()) < 
+						geoUtils.magnitude(pos1, 
+								closestIntercept.get().getPosition())) {
+					closestIntercept = Optional.of(i);
+					blockToKill = Optional.of(block);
+				}
 			}
 		}
 		
-		if (intercept.isPresent()) {
+		if (closestIntercept.isPresent()) {
+			bounceBall(closestIntercept.get());
 			removeBlock(blockToKill.get());
 			
 			updateBall(gc, game, delta - calculateInterceptDelta(pos1, pos2, 
-					intercept.get().getPosition(), delta));
+					closestIntercept.get().getPosition(), delta));
 		} else {
 			ball.setPosition(pos2);
 		}

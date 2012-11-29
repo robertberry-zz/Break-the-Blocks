@@ -533,4 +533,9 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 			break;
 		}
 	}
+
+	public void reset() {
+		score = 0;
+		lives = INITIAL_LIVES;
+	}
 }

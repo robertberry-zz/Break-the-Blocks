@@ -14,6 +14,11 @@ import com.sunderance.break_the_blocks.components.StringRenderComponent;
 import com.sunderance.break_the_blocks.entities.ComponentBasedEntity;
 import com.sunderance.slick_utils.Rect;
 
+/**
+ * Game over state
+ * 
+ * @author Robert Berry
+ */
 public class GameOverState extends EntityBasedState {
 	private static final String GAME_OVER_TEXT = "Game over!";
 	
@@ -67,6 +72,7 @@ public class GameOverState extends EntityBasedState {
 		Input input = gc.getInput();
 		
 		if (input.isKeyPressed(Input.KEY_ENTER)) {
+			((InGame) gameState).reset();
 			game.enterState(BreakTheBlocks.State.MENU.ordinal());
 		}
 	}

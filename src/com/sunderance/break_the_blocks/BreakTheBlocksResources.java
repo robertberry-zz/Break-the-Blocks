@@ -1,7 +1,10 @@
 package com.sunderance.break_the_blocks;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Collections;
 
 import nu.xom.ParsingException;
@@ -57,6 +60,25 @@ public class BreakTheBlocksResources {
 	}
 	
 	/**
+	 * Saves the current high scores.
+	 */
+	public void saveHighScores() {
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(SCORES_PATH);
+			OutputStreamWriter out = new OutputStreamWriter(fos, "UTF-8");
+			out.write(highScores.toDocument().toXML().toString());
+			out.close();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Whether the given score would appear in the high scores table
 	 * 
 	 * @param score The score
@@ -79,6 +101,8 @@ public class BreakTheBlocksResources {
 		ScoreTable.Entry entry = new ScoreTable.Entry(name, score);
 		
 		highScores = highScores.with(entry).take(NUMBER_HIGH_SCORES);
+		
+		saveHighScores();
 	}
 	
 	/**

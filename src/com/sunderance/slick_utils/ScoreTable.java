@@ -116,6 +116,31 @@ public class ScoreTable implements Iterable<ScoreTable.Entry> {
 	}
 	
 	/**
+	 * Score table as an XML document
+	 * 
+	 * @return The document
+	 */
+	public Document toDocument() {
+		Element root = new Element("scores");
+		Document doc = new Document(root);
+		
+		for (Entry entry : this) {
+			Element name = new Element("name");
+			name.appendChild(entry.getName());
+			
+			Element value = new Element("value");
+			value.appendChild(Integer.toString(entry.getScore()));
+			
+			Element score = new Element("score");
+			score.appendChild(name);
+			score.appendChild(value);
+			root.appendChild(score);
+		}
+		
+		return doc;
+	}
+	
+	/**
 	 * Constructs a score table from an XML document
 	 * 
 	 * @param doc The document

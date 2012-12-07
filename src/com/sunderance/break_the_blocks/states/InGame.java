@@ -264,18 +264,14 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 			Intercept i = intercept.get();
 			bounceBall(i);
 			
-			Vector2f paddleVelocity = paddle.getVelocity();
 			velocity = ball.getVelocity();
 			
-			// add spin based on paddle velocity
-			if (paddleVelocity.isRightward()) {
-				ball.setVelocity(velocity.scaleX(velocity.isRightward() ? 0.5f
-						: 1.5f));
-			} else if (paddleVelocity.isLeftward()) {
-				ball.setVelocity(velocity.scaleX(velocity.isLeftward() ? 0.5f : 
-					1.5f));
+			if (i.getSide() == Side.TOP) {
+				ball.setVelocity(velocity.withX(BALL_INITIAL_SPEED *
+						(i.getPosition().getX() - paddle.getPosition().getX()) /
+						(paddle.getWidth()/2)));
 			}
-			
+
 			updateBall(gc, game, delta - 
 					calculateInterceptDelta(pos1, pos2, i.getPosition(), 
 							delta));
@@ -511,6 +507,9 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 		return lives;
 	}
 	
+	/**
+	 * If the ball is stuck to the bat, releases it
+	 */
 	public void releaseBall() {
 		if (!ballReleased) {
 			ballReleased = true;
@@ -534,6 +533,9 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 		}
 	}
 
+	/**
+	 * Resets for a new game
+	 */
 	public void reset() {
 		score = 0;
 		lives = INITIAL_LIVES;

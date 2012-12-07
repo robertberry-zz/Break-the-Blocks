@@ -97,6 +97,7 @@ public class GameOverState extends EntityBasedState {
 	
 	public void exit(GameContainer gc, StateBasedGame game) {
 		gc.getInput().removeKeyListener(renderEnterScore);
+		renderEnterScore.reset();
 	}
 	
 	@Override
@@ -123,7 +124,7 @@ public class GameOverState extends EntityBasedState {
 						BreakTheBlocksResources.getInstance();
 				resources.addHighScore(name, score);
 			}
-			renderEnterScore.reset();
+			
 			((InGame) gameState).reset();
 			
 			if (isHighScore) {

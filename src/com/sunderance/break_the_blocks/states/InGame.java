@@ -513,7 +513,19 @@ public class InGame extends EntityBasedState implements Scoring, HasLives,
 	public void releaseBall() {
 		if (!ballReleased) {
 			ballReleased = true;
-			ball.setVelocity(new Vector2f(0.2f, -BALL_INITIAL_SPEED));
+			
+			Vector2f paddleVelocity = paddle.getVelocity();
+			
+			float xVel = 0;
+			float yVel = -BALL_INITIAL_SPEED;
+			
+			if (paddleVelocity.isRightward()) {
+				xVel = BALL_INITIAL_SPEED;
+			} else if (paddleVelocity.isLeftward()) {
+				xVel = -BALL_INITIAL_SPEED;
+			}
+			
+			ball.setVelocity(new Vector2f(xVel, yVel));
 		}		
 	}
 

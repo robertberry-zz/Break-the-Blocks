@@ -45,8 +45,6 @@ public class HighScores extends EntityBasedState {
 		pressKey.setPosition(gcRect.getBottomCentre()
 				.addY(-pressKey.getHeight() * 2));
 		addEntity(pressKey);
-		
-		
 	}
 	
 	@Override
@@ -63,6 +61,8 @@ public class HighScores extends EntityBasedState {
 				renderScores);
 		scoreTable.setPosition(Rect.fromGameContainer(gc).getCentre());
 		addEntity(scoreTable);
+		
+		gc.getInput().clearKeyPressedRecord();
 	}
 
 	@Override

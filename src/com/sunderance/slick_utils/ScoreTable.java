@@ -68,7 +68,7 @@ public class ScoreTable implements Iterable<ScoreTable.Entry> {
 		Comparator<Entry>  {
 	
 		public int compare(Entry score1, Entry score2) {
-			return score1.getScore() - score2.getScore();
+			return score2.getScore() - score1.getScore();
 		}
 	}
 
